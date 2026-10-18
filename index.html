@@ -1022,7 +1022,13 @@
     // ---------- Flagstaff ----------
     { id: 'canyon', s: 'fla', n: 'Grand Canyon, South Rim', q: 'Grand Canyon South Rim Mather Point', i: 'mountains', v: ['outdoors'],
       b: 'Start at Mather Point, walk part of the Rim Trail, then drive to the Desert View watchtower. It gets cold and windy up there.',
-      t: 'Full day', d: '1.5 hrs', booked: '', photo: true },
+      t: 'Full day', d: '1.5 hrs', photo: true },
+    { id: 'antelope', s: 'fla', n: 'Antelope Canyon tour', q: 'Antelope Canyon, Page, AZ', i: 'mountains', v: ['outdoors'],
+      b: 'A slot canyon of swirling red sandstone and beams of light, near Page. Check in about 30 min early. Your confirmation has the exact meeting point.',
+      t: 'Tour', d: '2–2.5 hrs', booked: 'Fri 23 · 9:15am', photo: true, note: 'Tours run on Arizona time' },
+    { id: 'horseshoe', s: 'fla', n: 'Horseshoe Bend', url: 'https://www.nps.gov/glca/planyourvisit/horseshoe-bend.htm', q: 'Horseshoe Bend Overlook, Page, AZ', i: 'mountains', v: ['outdoors'],
+      b: 'The famous horseshoe-shaped bend in the Colorado River, a short walk from the car park. Easy to add after Antelope Canyon.',
+      t: '1 hr', d: '2 hrs', photo: true, note: 'Paid parking' },
     { id: 'sedona', s: 'fla', n: 'Sedona red rocks', q: 'Sedona Arizona', i: 'mountains', v: ['outdoors', 'thrills'],
       b: 'Red rock towers all around. Walk the Bell Rock loop, see the Chapel of the Holy Cross, and take a Pink Jeep tour for a wilder ride.',
       t: 'Full day', d: '45 min', photo: true },
@@ -1163,11 +1169,13 @@
       ['h', 'Leave the hotel by 8:00pm: about 10 min (4 miles) up Mars Hill', ['Route', DIR('Americana Motor Hotel Flagstaff', 'Lowell Observatory, 1400 W Mars Hill Rd, Flagstaff, AZ')]],
       ['b', 'Lowell Observatory at 8:30pm: General Admission + Dark Skies Planetarium Show', 'lowell']] },
     { s: 'fla', t: 'Canyon country', p: [
-      ['b', 'Grand Canyon (move it to your booked day)', 'canyon'],
+      ['i', 'Grand Canyon South Rim day trip', 'canyon'],
       ['i', 'Planes of Fame on the drive back', 'planesfame']] },
-    { s: 'fla', t: 'Space day', p: [
-      ['i', 'Meteor Crater in the morning', 'meteor'],
-      ['i', 'Lava River Cave if you are brave', 'lavacave'],
+    { s: 'fla', t: 'Antelope Canyon day', p: [
+      ['h', 'Leave the hotel by 6:00am: about 130 miles north to Page on US-89 (2 to 2.5 hrs)', ['Route', DIR('Americana Motor Hotel Flagstaff', 'Page, AZ')]],
+      ['h', 'Time check: the canyon is on Navajo land, an hour ahead of Arizona in October. Most tours run on Arizona time and phones can jump ahead, so go by your confirmation'],
+      ['b', 'Antelope Canyon tour at 9:15am. Check in about 30 min early', 'antelope'],
+      ['i', 'Horseshoe Bend overlook, about 10 min from the canyon', 'horseshoe'],
       ['i', 'Evening on Route 66 in downtown Flagstaff', 'route66']] },
     { s: 'tuc', from: 'fla', t: 'Hello, ranch', p: [
       ['h', 'Drive about 4 hrs to Tucson', ['Route', DIR('Americana Motor Hotel Flagstaff', 'White Stallion Ranch Tucson')]],
@@ -1254,6 +1262,7 @@
     sedona: 'https://visitsedona.com/', bigfoot: 'https://bigfootbbq.com/',
     canyon: 'https://www.nps.gov/grca/index.htm', planesfame: 'https://planesoffame.org/',
     meteor: 'https://meteorcrater.com/', lavacave: 'https://www.fs.usda.gov/r03/coconino/recreation/lava-river-cave',
+    horseshoe: 'https://www.nps.gov/glca/planyourvisit/horseshoe-bend.htm',
     lowell: 'https://lowell.edu/', balloon: 'https://rainbowryders.com/locations/phoenix/', brotherjohns: 'https://brotherjohns.com/',
     pima: 'https://pimaair.org/', saguaro: 'https://www.nps.gov/sagu/index.htm',
     pinnacle: 'https://www.scottsdaleaz.gov/parks/find-a-park/pinnacle-peak-park', mim: 'https://mim.org/',
