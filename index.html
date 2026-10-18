@@ -1283,18 +1283,24 @@
   }
 
   // ---------- Weather ----------
-  // Live daily forecast from Open-Meteo (free, no key) for each base; typical October values as a fallback.
+  // Next 7 days: US National Weather Service (official forecast). Later days: ECMWF via Open-Meteo.
+  // No signal: typical October values, labelled as such.
   const WX_LOC = { sco: [33.528, -111.926], fla: [35.21, -111.61], tuc: [32.355, -111.14] };
+  const NWS = {
+    sco: 'https://api.weather.gov/gridpoints/PSR/165,61/forecast?units=si',
+    fla: 'https://api.weather.gov/gridpoints/FGZ/75,89/forecast?units=si',
+    tuc: 'https://api.weather.gov/gridpoints/TWC/85,56/forecast?units=si',
+  };
   const TYPICAL = { sco: [31, 17], fla: [17, 2], tuc: [28, 14] };
   const wx = {};
   const iso = i => { const d = new Date(2026, 9, 17 + i); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
   const wxStop = i => DAYS[i].s === 'home' ? 'tuc' : DAYS[i].s;
   function wxFor(i) {
     const st = wxStop(i), live = wx[st + '|' + iso(i)];
-    return live ? { ...live, live: true } : { hi: TYPICAL[st][0], lo: TYPICAL[st][1], code: 0, wind: 0, live: false };
+    return live ? { ...live, live: true } : { hi: TYPICAL[st][0], lo: TYPICAL[st][1], kind: 'sunny', label: 'Sunny', live: false };
   }
-  function wxKind(w) {
-    const c = w.code;
+  // WMO weather code (Open-Meteo) -> icon + label
+  function codeKind(c, wind) {
     let k, l;
     if (c >= 95) { k = 'storm'; l = 'Storms'; }
     else if (c >= 85) { k = 'snow'; l = 'Snow showers'; }
@@ -1306,35 +1312,77 @@
     else if (c === 3) { k = 'cloud'; l = 'Cloudy'; }
     else if (c >= 1) { k = 'partly'; l = c === 1 ? 'Mostly sunny' : 'Partly cloudy'; }
     else { k = 'sunny'; l = 'Sunny'; }
-    if (w.wind >= 35) { if (k === 'sunny' || k === 'partly' || k === 'cloud') k = 'wind'; l += ', windy'; }
+    if (wind >= 35) { if (k === 'sunny' || k === 'partly' || k === 'cloud') k = 'wind'; l += ', windy'; }
+    return [k, l];
+  }
+  // NWS short forecast text -> icon + label. A "slight chance" of rain doesn't turn a sunny day into a storm icon.
+  function textKind(txt, wind) {
+    const segs = txt.split(/\s+then\s+/i);
+    const firm = segs.filter(x => !/slight chance/i.test(x));
+    const t = firm.join(' ').toLowerCase();
+    let k, l;
+    if (!firm.length) {
+      k = 'partly'; l = /thunder/i.test(txt) ? 'Slight chance of storms' : 'Slight chance of rain';
+    } else if (/thunder/.test(t)) { k = 'storm'; l = /likely/.test(t) ? 'Storms likely' : /chance/.test(t) ? 'Chance of storms' : 'Thunderstorms'; }
+    else if (/snow|flurr/.test(t)) { k = 'snow'; l = 'Snow'; }
+    else if (/rain|shower|drizzle/.test(t)) { k = 'rain'; l = /likely/.test(t) ? 'Rain likely' : /chance/.test(t) ? 'Chance of rain' : 'Rain'; }
+    else if (/fog|haze|smoke/.test(t)) { k = 'fog'; l = 'Hazy'; }
+    else if (/windy|breezy|blustery/.test(t)) { k = 'wind'; l = 'Windy'; }
+    else if (/partly|mostly sunny|mostly clear/.test(t)) { k = 'partly'; l = /mostly sunny/.test(t) ? 'Mostly sunny' : 'Partly cloudy'; }
+    else if (/cloudy|overcast/.test(t)) { k = 'cloud'; l = 'Cloudy'; }
+    else { k = 'sunny'; l = 'Sunny'; }
+    if (wind >= 35 && !/windy/i.test(l)) { if (k === 'sunny' || k === 'partly' || k === 'cloud') k = 'wind'; l += ', windy'; }
     return [k, l];
   }
   const wxIcon = k => `<svg class="wxi wx-${k}" aria-hidden="true"><use href="#w-${k}"/></svg>`;
   function applyWx(d) { Object.assign(wx, d); renderDays(); renderNow(); }
   async function loadWeather() {
-    const KEY = 'hd:wx';
+    const KEY = 'hd:wx2';
     try {
       const c = JSON.parse(localStorage.getItem(KEY));
-      if (c && Date.now() - c.t < 3 * 3600e3) { applyWx(c.d); return; }
+      if (c && Date.now() - c.t < 2 * 3600e3) { applyWx(c.d); return; }
     } catch (e) {}
     const stops = ['sco', 'fla', 'tuc'];
-    const url = 'https://api.open-meteo.com/v1/forecast?latitude=' + stops.map(s => WX_LOC[s][0]).join(',') +
-      '&longitude=' + stops.map(s => WX_LOC[s][1]).join(',') +
-      '&daily=weather_code,temperature_2m_max,temperature_2m_min,wind_speed_10m_max&timezone=America%2FPhoenix' +
-      '&start_date=' + iso(0) + '&end_date=' + iso(11);
+    const d = {};
+    // 1) ECMWF for the whole trip
     try {
+      const url = 'https://api.open-meteo.com/v1/forecast?models=ecmwf_ifs025&latitude=' + stops.map(x => WX_LOC[x][0]).join(',') +
+        '&longitude=' + stops.map(x => WX_LOC[x][1]).join(',') +
+        '&daily=weather_code,temperature_2m_max,temperature_2m_min,wind_speed_10m_max&timezone=America%2FPhoenix' +
+        '&start_date=' + iso(0) + '&end_date=' + iso(11);
       const r = await fetch(url);
-      if (!r.ok) return;
-      const j = await r.json();
-      const d = {};
-      (Array.isArray(j) ? j : [j]).forEach((loc, k) => loc.daily.time.forEach((t, n) => {
-        const code = loc.daily.weather_code[n], hi = loc.daily.temperature_2m_max[n];
-        if (code == null || hi == null) return;
-        d[stops[k] + '|' + t] = { hi: Math.round(hi), lo: Math.round(loc.daily.temperature_2m_min[n]), code, wind: loc.daily.wind_speed_10m_max[n] || 0 };
-      }));
+      if (r.ok) {
+        const j = await r.json();
+        (Array.isArray(j) ? j : [j]).forEach((loc, k) => loc.daily.time.forEach((t, n) => {
+          const code = loc.daily.weather_code[n], hi = loc.daily.temperature_2m_max[n];
+          if (code == null || hi == null) return;
+          const [kind, label] = codeKind(code, loc.daily.wind_speed_10m_max[n] || 0);
+          d[stops[k] + '|' + t] = { hi: Math.round(hi), lo: Math.round(loc.daily.temperature_2m_min[n]), kind, label };
+        }));
+      }
+    } catch (e) {}
+    // 2) NWS overrides the days it covers
+    await Promise.all(stops.map(async st => {
+      try {
+        const r = await fetch(NWS[st]);
+        if (!r.ok) return;
+        const periods = (await r.json()).properties.periods;
+        periods.forEach(pd => {
+          const date = pd.startTime.slice(0, 10), key = st + '|' + date;
+          const wind = Math.max(0, ...(String(pd.windSpeed).match(/\d+/g) || []).map(Number));
+          if (pd.isDaytime) {
+            const [kind, label] = textKind(pd.shortForecast, wind);
+            d[key] = { ...(d[key] || { lo: TYPICAL[st][1] }), hi: Math.round(pd.temperature), kind, label };
+          } else if (d[key]) {
+            d[key].lo = Math.round(pd.temperature);
+          }
+        });
+      } catch (e) {}
+    }));
+    if (Object.keys(d).length) {
       try { localStorage.setItem(KEY, JSON.stringify({ t: Date.now(), d })); } catch (e) {}
       applyWx(d);
-    } catch (e) {}
+    }
   }
 
   // ---------- Today ----------
@@ -1342,7 +1390,7 @@
     $('#days').innerHTML = DAYS.map((D, i) => {
       const { wd, n } = dateOf(i);
       const c = D.s === 'home' ? 'var(--mint)' : STOPS[D.s].c;
-      const w = wxFor(i), [kind, label] = wxKind(w);
+      const w = wxFor(i), kind = w.kind, label = w.label;
       return `<button class="day${i === dayIdx ? ' is-today' : ''}" type="button" role="tab" data-day="${i}" aria-selected="${i === sel}" style="--c:${c}" aria-label="${wd} ${n} October, ${label}, high ${w.hi} degrees">
         <span class="dw">${wd}</span><span class="dn">${n}</span><span class="dwx">${wxIcon(kind)}${w.hi}°</span></button>`;
     }).join('');
@@ -1364,7 +1412,7 @@
       <div class="now-kicker"><span class="mono">${wd} ${n} Oct · Day ${sel + 1} of 12</span>${flag}</div>
       <h2>${D.t}</h2>
       <div class="where">${ic(D.from ? 'car' : 'pin')}${where}</div>
-      ${(() => { const w = wxFor(sel), [kind, label] = wxKind(w);
+      ${(() => { const w = wxFor(sel), kind = w.kind, label = w.label;
         return `<div class="wx">${wxIcon(kind)}<b>${w.hi}°</b><span>/ ${w.lo}° · ${label}</span><span class="wx-src">${w.live ? 'Forecast' : 'Typical Oct'}</span></div>`; })()}
       <ul class="plan">${D.p.map(([k, txt, ref, save]) => {
         const sid = k === 'i' ? (save || (typeof ref === 'string' && ACTS.some(a => a.id === ref) ? ref : '')) : '';
