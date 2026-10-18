@@ -259,7 +259,11 @@
     font-size: 1rem;
     letter-spacing: -.02em;
     font-variant-numeric: tabular-nums;
+    color: var(--ink);
+    text-decoration: none;
   }
+  .now-wx .go { margin-left: 2px; font-size: .75rem; }
+  .now-wx:active { transform: scale(.95); }
   .now-wx svg { width: 24px; height: 24px; margin-right: 2px; }
   .now-wx small { font-size: .85rem; color: var(--ink-2); }
   .now-kicker { padding-right: 112px; min-height: 36px; align-content: center; }
@@ -1290,6 +1294,7 @@
     tuc: 'https://api.weather.gov/gridpoints/TWC/85,56/forecast?units=si',
   };
   const TYPICAL = { sco: [31, 17], fla: [17, 2], tuc: [28, 14] };
+  const BBC = { sco: 'https://www.bbc.com/weather/5313457', fla: 'https://www.bbc.com/weather/5294810', tuc: 'https://www.bbc.com/weather/5318313' };
   const wx = {};
   const iso = i => { const d = new Date(2026, 9, 17 + i); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
   const wxStop = i => DAYS[i].s === 'home' ? 'tuc' : DAYS[i].s;
@@ -1408,7 +1413,7 @@
     const w = wxFor(sel);
     const wxNote = `${w.label}, low ${w.lo}, high ${w.hi} degrees${w.live ? '' : ', typical for October'}`;
     $('#now').innerHTML = `
-      <div class="now-wx" role="img" aria-label="${wxNote}" title="${wxNote}">${wxIcon(w.kind)}${w.lo}°<small>/</small>${w.hi}°</div>
+      <a class="now-wx" href="${BBC[wxStop(sel)]}" target="_blank" rel="noopener" aria-label="${wxNote}. Open BBC Weather" title="${wxNote}">${wxIcon(w.kind)}${w.lo}°<small>/</small>${w.hi}°<small class="go">↗</small></a>
       <div class="now-kicker"><span class="mono">${wd} ${n} Oct · Day ${sel + 1} of 12</span>${flag}</div>
       <h2>${D.t}</h2>
       <div class="where">${ic(D.from ? 'car' : 'pin')}${where}</div>
