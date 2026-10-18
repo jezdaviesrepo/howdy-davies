@@ -264,7 +264,8 @@
   .plan { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 8px; }
   .plan li {
     display: flex;
-    align-items: baseline;
+    flex-wrap: wrap;
+    align-items: center;
     gap: 10px;
     background: var(--card);
     border: 2px solid var(--ink);
@@ -284,6 +285,22 @@
     position: relative;
     top: -1px;
   }
+  .plan .ptxt { flex: 1 1 150px; min-width: 0; }
+  .links { display: flex; flex-wrap: wrap; gap: 6px; margin-left: auto; }
+  .see {
+    flex: 0 0 auto;
+    background: var(--ink);
+    color: #fff;
+    border-radius: 9px;
+    padding: 7px 9px;
+    font: 700 .62rem/1 var(--mono);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .see:active { transform: scale(.94); }
+  .up-txt { flex: 1; min-width: 0; }
   .lab.b { background: var(--sun); }
   .lab.i { background: var(--card); }
   .lab.h { background: var(--sky); }
@@ -986,20 +1003,49 @@
       t: 'Lunch', d: '25 min' },
   ];
 
-  // b = booked, i = idea, h = heads-up
+  // b = booked, i = idea, h = heads-up. Third item: links as [label, activity id | 'hotel:stop' | url]
+  const DIR = (a, b) => 'https://www.google.com/maps/dir/?api=1&origin=' + encodeURIComponent(a) + '&destination=' + encodeURIComponent(b);
   const DAYS = [
-    { s: 'sco', t: 'Touchdown, Scottsdale', p: [['h', 'Check in at the Hilton'], ['i', 'Lazy river, then dinner in Old Town']] },
-    { s: 'sco', t: 'Desert Sunday', p: [['i', 'Museum of Illusions or OdySea Aquarium'], ['i', 'Fashion Square if it gets too hot'], ['h', 'Early night: balloon pickup is before sunrise']] },
-    { s: 'sco', t: 'Balloon day', p: [['b', 'Hot-air balloon at sunrise'], ['i', 'Pool nap, then the Southwest Wildlife Center']] },
-    { s: 'sco', t: 'Last Scottsdale day', p: [['i', 'Little Miss BBQ lunch: queue before it opens'], ['h', 'Pack hoodies tonight. Flagstaff is cold']] },
-    { s: 'fla', from: 'sco', t: 'Road trip north', p: [['h', 'Drive about 2.5 hrs to Flagstaff'], ['i', 'Stop in Sedona for red rock photos'], ['i', 'Bigfoot BBQ on Route 66 for dinner']] },
-    { s: 'fla', t: 'Canyon country', p: [['b', 'Grand Canyon (move it to your booked day)'], ['i', 'Planes of Fame on the drive back']] },
-    { s: 'fla', t: 'Space day', p: [['i', 'Meteor Crater in the morning'], ['i', 'Lava River Cave if you are brave'], ['i', 'Lowell Observatory after dark, hoodies on']] },
-    { s: 'tuc', from: 'fla', t: 'Hello, ranch', p: [['h', 'Drive about 4 hrs to Tucson'], ['b', 'Check in at White Stallion Ranch'], ['i', 'Ask which night the weekly rodeo is']] },
-    { s: 'tuc', t: 'No-horse Sunday', p: [['h', 'No riding today, the horses get a day off'], ['i', 'Archery, target shooting, e-bikes, pool']] },
-    { s: 'tuc', t: 'Saddle up', p: [['i', 'Morning ride, pool afternoon'], ['i', "Brother John's BBQ for a night out"]] },
-    { s: 'tuc', t: 'Last ranch day', p: [['i', 'Pima Air & Space + Boneyard, or one last ride'], ['i', 'Sunset at Saguaro National Park']] },
-    { s: 'home', from: 'tuc', t: 'Heading home', p: [['h', 'Check out and travel day'], ['i', 'Vote: best day, worst snack, funniest moment']] },
+    { s: 'sco', t: 'Touchdown, Scottsdale', p: [
+      ['h', 'Check in at the Hilton', [['Map', 'hotel:sco']]],
+      ['i', 'Lazy river, then dinner in Old Town', [['Pool', 'lazyriver'], ['Old Town', 'oldtown']]]] },
+    { s: 'sco', t: 'Desert Sunday', p: [
+      ['i', 'Museum of Illusions or OdySea Aquarium', [['Illusions', 'illusions'], ['OdySea', 'odysea']]],
+      ['i', 'Fashion Square if it gets too hot', [['See', 'fashion']]],
+      ['h', 'Early night: balloon pickup is before sunrise', [['Balloon', 'balloon']]]] },
+    { s: 'sco', t: 'Balloon day', p: [
+      ['b', 'Hot-air balloon at sunrise', [['See', 'balloon']]],
+      ['i', 'Pool nap, then the Southwest Wildlife Center', [['See', 'swcc']]]] },
+    { s: 'sco', t: 'Last Scottsdale day', p: [
+      ['i', 'Little Miss BBQ lunch: queue before it opens', [['See', 'littlemiss']]],
+      ['h', 'Pack hoodies tonight. Flagstaff is cold']] },
+    { s: 'fla', from: 'sco', t: 'Road trip north', p: [
+      ['h', 'Drive about 2.5 hrs to Flagstaff', [['Route', DIR('Hilton Scottsdale Resort and Villas', 'Americana Motor Hotel Flagstaff')]]],
+      ['i', 'Stop in Sedona for red rock photos', [['See', 'sedona']]],
+      ['i', 'Bigfoot BBQ on Route 66 for dinner', [['See', 'bigfoot']]]] },
+    { s: 'fla', t: 'Canyon country', p: [
+      ['b', 'Grand Canyon (move it to your booked day)', [['See', 'canyon']]],
+      ['i', 'Planes of Fame on the drive back', [['See', 'planesfame']]]] },
+    { s: 'fla', t: 'Space day', p: [
+      ['i', 'Meteor Crater in the morning', [['See', 'meteor']]],
+      ['i', 'Lava River Cave if you are brave', [['See', 'lavacave']]],
+      ['i', 'Lowell Observatory after dark, hoodies on', [['See', 'lowell']]]] },
+    { s: 'tuc', from: 'fla', t: 'Hello, ranch', p: [
+      ['h', 'Drive about 4 hrs to Tucson', [['Route', DIR('Americana Motor Hotel Flagstaff', 'White Stallion Ranch Tucson')]]],
+      ['b', 'Check in at White Stallion Ranch', [['Map', 'hotel:tuc']]],
+      ['i', 'Ask which night the weekly rodeo is', [['Ranch', 'hotel:tuc']]]] },
+    { s: 'tuc', t: 'No-horse Sunday', p: [
+      ['h', 'No riding today, the horses get a day off'],
+      ['i', 'Archery, target shooting, e-bikes, pool', [['Ranch', 'hotel:tuc']]]] },
+    { s: 'tuc', t: 'Saddle up', p: [
+      ['i', 'Morning ride, pool afternoon', [['Ranch', 'hotel:tuc']]],
+      ['i', "Brother John's BBQ for a night out", [['See', 'brotherjohns']]]] },
+    { s: 'tuc', t: 'Last ranch day', p: [
+      ['i', 'Pima Air & Space + Boneyard, or one last ride', [['See', 'pima']]],
+      ['i', 'Sunset at Saguaro National Park', [['See', 'saguaro']]]] },
+    { s: 'home', from: 'tuc', t: 'Heading home', p: [
+      ['h', 'Check out and travel day'],
+      ['i', 'Vote: best day, worst snack, funniest moment']] },
   ];
 
   const TOP10 = {
@@ -1050,6 +1096,9 @@
 
   // ---------- cards ----------
   const href = a => a.url || MAP(a.q);
+  const linkHref = r => r.startsWith('http') ? r : r.startsWith('hotel:') ? MAP(STOPS[r.slice(6)].hq) : href(ACTS.find(a => a.id === r));
+  const seeLinks = links => links && links.length
+    ? `<span class="links">${links.map(([l, r]) => `<a class="see" href="${linkHref(r)}" target="_blank" rel="noopener">${l} ↗</a>`).join('')}</span>` : '';
   function card(a, showStop) {
     const v = VIBES[a.v[0]];
     const meta = [showStop ? STOPS[a.s].short : '', a.t, a.d && a.d + ' away'].filter(Boolean).join(' · ');
@@ -1148,7 +1197,7 @@
       <div class="now-kicker"><span class="mono">${wd} ${n} Oct · Day ${sel + 1} of 12</span>${flag}</div>
       <h2>${D.t}</h2>
       <div class="where">${ic(D.from ? 'car' : 'pin')}${where}</div>
-      <ul class="plan">${D.p.map(([k, txt]) => `<li><span class="lab ${k}">${LAB[k]}</span><span>${txt}</span></li>`).join('')}</ul>
+      <ul class="plan">${D.p.map(([k, txt, links]) => `<li><span class="lab ${k}">${LAB[k]}</span><span class="ptxt">${txt}</span>${seeLinks(links)}</li>`).join('')}</ul>
       <div class="tonight">${ic('moon')}<span>${tonight}</span></div>`;
 
     const banner = $('#banner');
@@ -1158,16 +1207,16 @@
 
     // next booked thing after the selected day
     const up = $('#upnext');
-    let j = -1, item = null;
+    let j = -1, item = null, lk = null;
     for (let k = sel + 1; k < DAYS.length && !item; k++) {
       const hit = DAYS[k].p.find(([type]) => type === 'b');
-      if (hit) { j = k; item = hit[1]; }
+      if (hit) { j = k; item = hit[1]; lk = hit[2]; }
     }
     if (item) {
       const gap = j - sel, dd = dateOf(j);
       const when = gap === 1 ? (sel === dayIdx ? 'tomorrow' : 'next day') : `in ${gap} days`;
       up.hidden = false;
-      up.innerHTML = `<span class="ico-box">${ic('ticket')}</span><span><span class="mono">Next booked · ${dd.wd} ${dd.n} · ${when}</span><b>${item}</b></span>`;
+      up.innerHTML = `<span class="ico-box">${ic('ticket')}</span><span class="up-txt"><span class="mono">Next booked · ${dd.wd} ${dd.n} · ${when}</span><b>${item}</b></span>${seeLinks(lk && lk.slice(0, 1))}`;
     } else up.hidden = true;
 
     // route
