@@ -457,6 +457,24 @@
   .chip svg { width: 16px; height: 16px; }
   .chip[aria-pressed="true"] { background: var(--c, var(--ink)); color: var(--on, #fff); box-shadow: 2px 2px 0 var(--ink); }
   .count { color: var(--ink-2); margin: 0 0 -6px; }
+  .seg.two { grid-template-columns: 1fr 1fr; }
+  .subview { display: grid; gap: 18px; }
+  .fast-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .fast {
+    display: grid;
+    align-content: space-between;
+    gap: 8px;
+    min-height: 86px;
+    padding: 12px;
+    border: 2.5px solid var(--ink);
+    border-radius: 18px;
+    box-shadow: 3px 3px 0 var(--ink);
+    background: var(--b);
+    color: var(--t);
+    text-decoration: none;
+  }
+  .fast b { font-family: var(--display); font-weight: 800; font-size: 1.12rem; line-height: 1.05; letter-spacing: -.02em; }
+  .fast:active { transform: scale(.96); }
 
   /* ---------- Activity cards ---------- */
   .list { display: grid; gap: 16px; }
@@ -854,9 +872,18 @@
 
   <!-- ================= EATS ================= -->
   <section class="view" id="eats" aria-label="Eats" hidden>
-    <h2 class="sec-title">Texas BBQ &amp; good eats</h2>
-    <p class="sec-sub">Smoked brisket at every stop. The ranch is full board, so its picks are for a night out.</p>
-    <div class="list" id="eat-list"></div>
+    <div class="seg two" id="eat-seg" role="group" aria-label="Choose food type"></div>
+    <div class="subview" id="eat-bbq">
+      <h2 class="sec-title">Texas BBQ &amp; good eats</h2>
+      <p class="sec-sub">Smoked brisket at every stop. The ranch is full board, so its picks are for a night out.</p>
+      <div class="list" id="eat-list"></div>
+    </div>
+    <div class="subview" id="eat-fast" hidden>
+      <h2 class="sec-title">Fast food</h2>
+      <p class="sec-sub">Tap a chain to see the nearest ones on Google Maps. <b>Near me</b> uses your phone's location, handy on drive days.</p>
+      <div class="seg" id="fast-seg" role="group" aria-label="Find near"></div>
+      <div class="fast-grid" id="fast-grid"></div>
+    </div>
   </section>
 
   <!-- ================= INFO ================= -->
@@ -1169,7 +1196,8 @@
   const stopFor = i => (i < 4 ? 'sco' : i < 7 ? 'fla' : 'tuc');
   let sel = Math.min(11, Math.max(0, dayIdx));
 
-  const state = { stop: dayIdx > 11 ? 'all' : stopFor(Math.max(0, dayIdx)), vibe: 'all' };
+  const state = { stop: dayIdx > 11 ? 'all' : stopFor(Math.max(0, dayIdx)), vibe: 'all', eat: 'bbq' };
+  state.fastStop = state.stop === 'all' ? 'me' : state.stop;
 
   // ---------- cards ----------
   const href = a => a.url || MAP(a.q);
@@ -1279,7 +1307,28 @@
   }
 
   // ---------- Eats ----------
+  // [name, tile colour, text colour]. Tiles open Google Maps searching near the chosen base (or the phone).
+  const CHAINS = [
+    ['In-N-Out Burger', '#E2231A', '#FFD100'], ["Raising Cane's", '#C8102E', '#FFFFFF'],
+    ['Chick-fil-A', '#E51636', '#FFFFFF'], ["McDonald's", '#DA291C', '#FFC72C'],
+    ['Burger King', '#F5EBDC', '#D62300'], ['KFC', '#A3080C', '#FFFFFF'],
+    ['Taco Bell', '#5B2A86', '#FFFFFF'], ["Wendy's", '#E2203D', '#FFFFFF'],
+    ['Whataburger', '#FF7F00', '#FFFFFF'], ['Five Guys', '#D21033', '#FFFFFF'],
+    ['Shake Shack', '#1F1F1F', '#9BD143'], ['Chipotle', '#441500', '#FFFFFF'],
+    ['Panda Express', '#D02030', '#FFFFFF'], ['Jack in the Box', '#E41B17', '#FFFFFF'],
+    ['Sonic Drive-In', '#0072CE', '#FFD100'], ["Culver's", '#005DAA', '#FFFFFF'],
+    ['Dutch Bros Coffee', '#003B71', '#FFFFFF'], ['Starbucks', '#00704A', '#FFFFFF'],
+  ];
   function renderEats() {
+    $('#eat-seg').innerHTML = [['bbq', 'BBQ & good eats'], ['fast', 'Fast food']]
+      .map(([k, l]) => `<button type="button" data-eat="${k}" aria-pressed="${state.eat === k}">${l}</button>`).join('');
+    $('#eat-bbq').hidden = state.eat !== 'bbq';
+    $('#eat-fast').hidden = state.eat !== 'fast';
+    $('#fast-seg').innerHTML = [['sco', 'Scottsdale'], ['fla', 'Flagstaff'], ['tuc', 'Ranch'], ['me', 'Near me']]
+      .map(([k, l]) => `<button type="button" data-fast="${k}" aria-pressed="${state.fastStop === k}">${l}</button>`).join('');
+    const near = state.fastStop === 'me' ? 'near me' : 'near ' + STOPS[state.fastStop].hq;
+    $('#fast-grid').innerHTML = CHAINS.map(([n, b, t]) =>
+      `<a class="fast" href="${MAP(n + ' ' + near)}" target="_blank" rel="noopener" style="--b:${b};--t:${t}"><b>${n}</b><span class="mono">Nearest ↗</span></a>`).join('');
     $('#eat-list').innerHTML = ['sco', 'fla', 'tuc'].map(s =>
       `<p class="group-h" style="--c:${STOPS[s].c}"><i></i>${STOPS[s].name}</p>` +
       ACTS.filter(a => a.s === s && a.v.includes('food')).map(a => card(a, false)).join('')).join('');
@@ -1555,7 +1604,7 @@
 
   // ---------- events ----------
   document.addEventListener('click', e => {
-    const el = e.target.closest('[data-heart],[data-done],[data-stop],[data-vibe],[data-day],[data-tab],[data-go],#dog');
+    const el = e.target.closest('[data-heart],[data-done],[data-stop],[data-vibe],[data-day],[data-tab],[data-go],[data-eat],[data-fast],#dog');
     if (!el) return;
     if (el.dataset.heart) {
       const id = el.dataset.heart;
@@ -1575,6 +1624,10 @@
       show(el.dataset.tab, true);
     } else if (el.dataset.go) {
       show(ACTS.some(a => saved.has(a.id)) ? 'loved' : el.dataset.go, true);
+    } else if (el.dataset.eat) {
+      state.eat = el.dataset.eat; renderEats();
+    } else if (el.dataset.fast) {
+      state.fastStop = el.dataset.fast; renderEats();
     } else if (el.id === 'dog') {
       trick(); tip();
     }
