@@ -6,9 +6,9 @@
 <meta name="theme-color" content="#FFF4EA">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Howdy Davies">
+<meta name="apple-mobile-web-app-title" content="Howdy Doody">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>Howdy Davies</title>
+<title>Howdy Doody</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E%F0%9F%A4%A0%3C/text%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -838,7 +838,7 @@
     </button>
     <div class="brand-text">
       <p class="mono">Arizona road trip · Oct 2026</p>
-      <h1>Howdy <span class="hl">Davies</span></h1>
+      <h1>Howdy <span class="hl">Doody</span></h1>
     </div>
     <div class="bubble" id="bubble" role="status" hidden></div>
   </div>
@@ -969,9 +969,9 @@
   // t = time, d = drive, booked / inc / when, photo, who ('teen' | 'parent'), note
   const ACTS = [
     // ---------- Scottsdale ----------
-    { id: 'balloon', s: 'sco', n: 'Rainbow Ryders balloon ride', url: 'https://rainbowryders.com/locations/phoenix/', q: 'Rainbow Ryders Hot Air Balloon Ride Phoenix', i: 'balloon', v: ['thrills', 'outdoors'],
-      b: "Sunrise flight over the Sonoran Desert with Rainbow Ryders. Pickup is early and it's cold before dawn, so wear layers you can peel off. Your booking confirmation has the meeting point.",
-      booked: 'Mon 19 · sunrise', photo: true },
+    { id: 'balloon', s: 'sco', n: 'Rainbow Ryders balloon ride', url: 'https://rainbowryders.com/locations/phoenix/', q: 'Rainbow Ryders, 7934 N Glen Harbor Blvd, Glendale, AZ 85307', i: 'balloon', v: ['thrills', 'outdoors'],
+      b: "Sunrise flight over the Sonoran Desert with Rainbow Ryders. Pickup is early and it's cold before dawn, so wear layers you can peel off. Meet at 7934 N Glen Harbor Blvd, Glendale by 5:30am, so leave the Hilton by 4:40am.",
+      booked: 'Mon 19 · meet 5:30am', photo: true },
     { id: 'illusions', s: 'sco', n: 'Museum of Illusions', q: 'Museum of Illusions Scottsdale', i: 'eye', v: ['culture'],
       b: 'Rooms built to mess with your eyes: anti-gravity, shrinking people, infinity mirrors. Made for photos.',
       t: '1 hr', d: '10 min', who: 'teen', photo: true },
@@ -1142,9 +1142,10 @@
       ['i', 'Museum of Illusions', 'illusions'],
       ['i', 'Or OdySea Aquarium + butterflies', 'odysea'],
       ['i', 'Fashion Square if it gets too hot', 'fashion'],
-      ['h', 'Early night: Rainbow Ryders pickup is before sunrise']] },
+      ['h', 'Early night: alarm about 4:10am, leave by 4:40am for the 5:30am balloon meet']] },
     { s: 'sco', t: 'Balloon day', p: [
-      ['b', 'Hot-air balloon with Rainbow Ryders at sunrise', 'balloon'],
+      ['h', 'Leave the Hilton by 4:40am: 22 miles, about 35 to 45 min across Phoenix', ['Route', DIR('Hilton Scottsdale Resort and Villas', '7934 N Glen Harbor Blvd, Glendale, AZ 85307')]],
+      ['b', 'Rainbow Ryders balloon: be at the Glendale meeting point by 5:30am', 'balloon'],
       ['i', 'Pool nap, then the Southwest Wildlife Center', 'swcc']] },
     { s: 'sco', t: 'Last Scottsdale day', p: [
       ['i', 'Morning: Pinnacle Peak hike before the heat', 'pinnacle'],
