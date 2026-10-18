@@ -1285,8 +1285,9 @@
   }
 
   // ---------- Weather ----------
-  // Next 7 days: US National Weather Service (official forecast). Later days: ECMWF via Open-Meteo.
-  // No signal: typical October values, labelled as such.
+  // BBC Weather first (the feed bbc.com/weather itself uses; unofficial, so it may change).
+  // Backup: US National Weather Service for 7 days, ECMWF via Open-Meteo after that.
+  // No signal at all: typical October values, labelled as such.
   const WX_LOC = { sco: [33.528, -111.926], fla: [35.21, -111.61], tuc: [32.355, -111.14] };
   const NWS = {
     sco: 'https://api.weather.gov/gridpoints/PSR/165,61/forecast?units=si',
@@ -1294,7 +1295,8 @@
     tuc: 'https://api.weather.gov/gridpoints/TWC/85,56/forecast?units=si',
   };
   const TYPICAL = { sco: [31, 17], fla: [17, 2], tuc: [28, 14] };
-  const BBC = { sco: 'https://www.bbc.com/weather/5313457', fla: 'https://www.bbc.com/weather/5294810', tuc: 'https://www.bbc.com/weather/5318313' };
+  const BBC_ID = { sco: 5313457, fla: 5294810, tuc: 5318313 };
+  const BBC = Object.fromEntries(Object.entries(BBC_ID).map(([k, id]) => [k, 'https://www.bbc.com/weather/' + id]));
   const wx = {};
   const iso = i => { const d = new Date(2026, 9, 17 + i); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
   const wxStop = i => DAYS[i].s === 'home' ? 'tuc' : DAYS[i].s;
@@ -1337,16 +1339,53 @@
     if (wind >= 35 && !/windy/i.test(l)) { if (k === 'sunny' || k === 'partly' || k === 'cloud') k = 'wind'; l += ', windy'; }
     return [k, l];
   }
+  function bbcKind(type, text, wind) {
+    const t = String(text || '').toLowerCase();
+    let k;
+    if (type >= 28 && type <= 30 || /thunder/.test(t)) k = 'storm';
+    else if (type >= 16 && type <= 27 || /snow|sleet|hail/.test(t)) k = 'snow';
+    else if (type >= 9 && type <= 15 || /rain|drizzle|shower/.test(t)) k = 'rain';
+    else if (type === 5 || type === 6 || /fog|mist|haz/.test(t)) k = 'fog';
+    else if (type === 7 || type === 8 || /cloud|overcast/.test(t)) k = 'cloud';
+    else if (type === 2 || type === 3 || /interval|partly/.test(t)) k = 'partly';
+    else k = 'sunny';
+    let l = t ? t.charAt(0).toUpperCase() + t.slice(1) : 'Sunny';
+    if (wind >= 35) { if (k === 'sunny' || k === 'partly' || k === 'cloud') k = 'wind'; l += ', windy'; }
+    return [k, l];
+  }
+  async function fromBBC(stops) {
+    const d = {};
+    await Promise.all(stops.map(async st => {
+      try {
+        const r = await fetch('https://weather-broker-cdn.api.bbci.co.uk/en/forecast/aggregated/' + BBC_ID[st]);
+        if (!r.ok) return;
+        (await r.json()).forecasts.forEach(f => {
+          const x = f.summary && f.summary.report;
+          if (!x || x.maxTempC == null || x.minTempC == null) return;
+          const [kind, label] = bbcKind(x.weatherType, x.weatherTypeText, x.windSpeedKph || 0);
+          d[st + '|' + x.localDate] = { hi: Math.round(x.maxTempC), lo: Math.round(x.minTempC), kind, label };
+        });
+      } catch (e) {}
+    }));
+    return d;
+  }
   const wxIcon = k => `<svg class="wxi wx-${k}" aria-hidden="true"><use href="#w-${k}"/></svg>`;
   function applyWx(d) { Object.assign(wx, d); renderDays(); renderNow(); }
   async function loadWeather() {
-    const KEY = 'hd:wx2';
+    const KEY = 'hd:wx3';
     try {
       const c = JSON.parse(localStorage.getItem(KEY));
       if (c && Date.now() - c.t < 2 * 3600e3) { applyWx(c.d); return; }
     } catch (e) {}
     const stops = ['sco', 'fla', 'tuc'];
-    const d = {};
+    const d = await fromBBC(stops);
+    if (!Object.keys(d).length) await fromBackup(stops, d);
+    if (Object.keys(d).length) {
+      try { localStorage.setItem(KEY, JSON.stringify({ t: Date.now(), d })); } catch (e) {}
+      applyWx(d);
+    }
+  }
+  async function fromBackup(stops, d) {
     // 1) ECMWF for the whole trip
     try {
       const url = 'https://api.open-meteo.com/v1/forecast?models=ecmwf_ifs025&latitude=' + stops.map(x => WX_LOC[x][0]).join(',') +
@@ -1382,10 +1421,6 @@
         });
       } catch (e) {}
     }));
-    if (Object.keys(d).length) {
-      try { localStorage.setItem(KEY, JSON.stringify({ t: Date.now(), d })); } catch (e) {}
-      applyWx(d);
-    }
   }
 
   // ---------- Today ----------
