@@ -1,909 +1,1200 @@
 <!doctype html>
+<html lang="en">
+<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Arizona Road Trip</title>
-<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="theme-color" content="#FFF4EA">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Howdy Davies">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Howdy Davies</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E%F0%9F%A4%A0%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Space+Mono:wght@700&display=swap">
 <style>
-  /* Layout: playful single-scroll road-trip itinerary, sticky leg chips, stacked cards.
-     Palette: fun desert fiesta — peach ground, turquoise sky accent, sunset coral, cactus green, sunny yellow, cactus-flower pink. */
+  /* Layout: phone-first trip app. Sticker header, "Today" card driven by the real date,
+     swipeable day strip, filterable bucket-list feed, fixed bottom tabs. Light only, by design. */
   :root {
-    --bg: #fff3e2;
-    --surface: #fffaf2;
-    --ink: #33281f;
-    --muted: #8a7256;
-    --line: #f0dcc0;
-    --teal: #0ea5b7;
-    --teal-soft: #d4f1f4;
-    --coral: #f2662f;
-    --green: #3fa34d;
-    --green-soft: #dcf2db;
-    --pink: #e8488b;
-    --yellow: #ffc233;
-    --fdisplay: "Rye", "Big Shoulders Display", Georgia, serif;
-    --fbody: "Nunito", system-ui, sans-serif;
-    --fmono: "Space Mono", ui-monospace, monospace;
-    color-scheme: light; /* always-light fiesta palette — no dark/purple mode */
+    --paper: #FFF4EA;
+    --card: #FFFFFF;
+    --ink: #1B1D2A;
+    --ink-2: #5A5C6B;
+    --orange: #FF6A2B;
+    --pink: #FF4F96;
+    --pink-soft: #FFD6E7;
+    --cobalt: #3159FF;
+    --lime: #B5EB3C;
+    --sun: #FFC93C;
+    --sky: #8FD3FF;
+    --mint: #4FDDB4;
+    --stamp: #12904F;
+    --display: "Bricolage Grotesque", "Arial Black", system-ui, sans-serif;
+    --body: "Bricolage Grotesque", system-ui, -apple-system, sans-serif;
+    --mono: "Space Mono", ui-monospace, Menlo, monospace;
+    --shadow: 4px 4px 0 var(--ink);
+    color-scheme: light;
   }
 
   * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html { -webkit-text-size-adjust: 100%; }
   body {
-    background: var(--bg);
-    color: var(--ink);
-    font-family: var(--fbody);
-    line-height: 1.55;
-    font-size: 16px;
-    -webkit-font-smoothing: antialiased;
-  }
-  .wrap {
-    max-width: 760px;
-    margin: 0 auto;
-    padding-left: max(18px, env(safe-area-inset-left, 0px));
-    padding-right: max(18px, env(safe-area-inset-right, 0px));
-  }
-  a { color: var(--teal); }
-
-  /* ---- Hero ---- */
-  .hero {
-    padding-block: 34px 28px;
-    text-align: center;
-    background:
-      radial-gradient(circle at 18% 20%, color-mix(in srgb, var(--yellow) 30%, transparent), transparent 42%),
-      radial-gradient(circle at 85% 12%, color-mix(in srgb, var(--pink) 24%, transparent), transparent 40%);
-  }
-  .logo {
-    width: clamp(120px, 34vw, 176px);
-    height: auto;
-    display: block;
-    margin: 0 auto 6px;
-    animation: bob 3.4s ease-in-out infinite;
-    transform-origin: 50% 90%;
-  }
-  @keyframes bob { 0%,100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
-  @media (prefers-reduced-motion: reduce) { .logo { animation: none; } }
-  h1 {
-    font-family: var(--fdisplay);
-    font-weight: 400;
-    font-size: clamp(2.7rem, 12vw, 4.6rem);
-    line-height: .95;
     margin: 0;
-    color: var(--coral);
-    text-wrap: balance;
-    text-shadow: 3px 3px 0 color-mix(in srgb, var(--teal) 55%, transparent);
+    background-color: var(--paper);
+    background-image: radial-gradient(rgba(27, 29, 42, .08) 1px, transparent 1.4px);
+    background-size: 18px 18px;
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
   }
-  h1 .sub {
-    display: block;
-    font-family: var(--fdisplay);
-    font-size: clamp(1rem, 4.5vw, 1.5rem);
-    color: var(--teal);
-    margin-top: 8px;
-    text-shadow: none;
+  a { color: inherit; }
+  button { font: inherit; color: inherit; -webkit-appearance: none; appearance: none; }
+  :focus-visible { outline: 3px solid var(--cobalt); outline-offset: 2px; }
+  .wrap {
+    max-width: 560px;
+    margin: 0 auto;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
   }
-  .eyebrow {
-    font-family: var(--fmono);
-    font-size: .74rem;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    color: var(--pink);
-    margin: 0 0 4px;
+  .mono {
+    font-family: var(--mono);
     font-weight: 700;
-  }
-  .lede {
-    max-width: 46ch;
-    color: var(--muted);
-    margin: 14px auto 0;
-    font-size: 1.02rem;
-    font-weight: 600;
-  }
-  .meta-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px 10px;
-    margin-top: 20px;
-    justify-content: center;
-  }
-  .pill {
-    font-family: var(--fmono);
-    font-size: .72rem;
-    letter-spacing: .03em;
+    font-size: .68rem;
+    letter-spacing: .09em;
     text-transform: uppercase;
-    border: 2px solid var(--teal);
-    border-radius: 999px;
-    padding: 5px 13px;
-    color: var(--teal);
-    background: var(--surface);
-    font-weight: 700;
   }
 
-  /* ---- Sticky leg nav ---- */
-  nav.chips {
-    position: sticky;
-    top: env(safe-area-inset-top, 0px);
-    z-index: 20;
-    background: color-mix(in srgb, var(--bg) 92%, transparent);
-    backdrop-filter: blur(8px);
-    border-bottom: 2px dashed var(--line);
+  /* ---------- Header ---------- */
+  .top { padding-top: calc(env(safe-area-inset-top, 0px) + 18px); padding-bottom: 4px; }
+  .brand { position: relative; display: flex; align-items: center; gap: 14px; }
+  .sticker {
+    flex: 0 0 auto;
+    width: 90px; height: 90px;
+    border-radius: 50%;
+    background: var(--card);
+    border: 2.5px solid var(--ink);
+    box-shadow: var(--shadow);
+    transform: rotate(-8deg);
+    padding: 5px 6px 3px;
+    cursor: pointer;
   }
-  nav.chips .inner {
+  .sticker svg { width: 100%; height: 100%; display: block; transform-origin: 50% 85%; animation: bob 4.5s ease-in-out infinite; }
+  .sticker.wiggle svg { animation: wiggle .55s ease; }
+  @keyframes bob { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+  @keyframes wiggle { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-14deg) scale(1.06); } 60% { transform: rotate(10deg) scale(1.06); } }
+  .brand-text { min-width: 0; }
+  .brand-text .mono { color: var(--ink-2); margin: 0 0 4px; }
+  h1 {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: clamp(2.5rem, 12vw, 3.5rem);
+    line-height: .86;
+    letter-spacing: -.045em;
+    margin: 0;
+  }
+  h1 .hl {
+    background: linear-gradient(transparent 56%, var(--sun) 56%, var(--sun) 92%, transparent 92%);
+    padding: 0 .06em;
+    margin-left: -.06em;
+  }
+  .bubble {
+    position: absolute;
+    left: 86px; top: -8px;
+    max-width: calc(100% - 92px);
+    background: var(--card);
+    border: 2px solid var(--ink);
+    border-radius: 14px 14px 14px 4px;
+    box-shadow: 3px 3px 0 var(--ink);
+    padding: 7px 11px;
+    font-weight: 700;
+    font-size: .88rem;
+    line-height: 1.3;
+    z-index: 30;
+    animation: pop .25s ease;
+  }
+  @keyframes pop { from { transform: scale(.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+  /* ---------- Views ---------- */
+  main { padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px)); }
+  .view { display: grid; gap: 18px; padding-top: 16px; }
+  .sec-title {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 1.55rem;
+    letter-spacing: -.035em;
+    line-height: 1.05;
+    margin: 10px 0 -4px;
+    text-wrap: balance;
+  }
+  .sec-sub { margin: -8px 0 0; color: var(--ink-2); font-size: .95rem; }
+
+  /* ---------- Day strip ---------- */
+  .days {
     display: flex;
     gap: 8px;
     overflow-x: auto;
-    padding-block: 11px;
+    scroll-snap-type: x proximity;
+    padding: 12px 4px 10px;
+    margin: -6px -4px -8px;
     scrollbar-width: none;
   }
-  nav.chips .inner::-webkit-scrollbar { display: none; }
-  nav.chips a {
+  .days::-webkit-scrollbar { display: none; }
+  .day {
+    position: relative;
     flex: 0 0 auto;
-    font-family: var(--fmono);
-    font-size: .74rem;
-    letter-spacing: .02em;
-    text-transform: uppercase;
-    text-decoration: none;
-    color: var(--muted);
-    border: 2px solid var(--line);
-    border-radius: 999px;
-    padding: 6px 13px;
-    white-space: nowrap;
-    font-weight: 700;
-    transition: all .15s;
+    scroll-snap-align: center;
+    width: 58px;
+    padding: 7px 0 8px;
+    border: 2px solid var(--ink);
+    border-radius: 14px;
+    background: var(--card);
+    box-shadow: 2px 2px 0 var(--ink);
+    text-align: center;
+    cursor: pointer;
+    transition: transform .12s;
   }
-  nav.chips a.active {
-    color: #fff;
-    background: var(--coral);
-    border-color: var(--coral);
+  .day .dw { display: block; font-family: var(--mono); font-weight: 700; font-size: .6rem; letter-spacing: .08em; text-transform: uppercase; }
+  .day .dn { display: block; font-family: var(--display); font-weight: 800; font-size: 1.4rem; line-height: 1.05; font-variant-numeric: tabular-nums; }
+  .day .dot { display: block; width: 9px; height: 9px; margin: 3px auto 0; border-radius: 50%; background: var(--c); border: 1.5px solid var(--ink); }
+  .day[aria-selected="true"] { background: var(--ink); color: #fff; transform: translateY(-3px); box-shadow: 3px 3px 0 var(--c); }
+  .day.is-today::before {
+    content: "TODAY";
+    position: absolute;
+    top: -9px; left: 50%;
+    transform: translateX(-50%);
+    background: var(--sun);
+    color: var(--ink);
+    border: 1.5px solid var(--ink);
+    border-radius: 6px;
+    font: 700 .5rem/1.5 var(--mono);
+    letter-spacing: .06em;
+    padding: 0 4px;
   }
 
-  /* ---- Leg section ---- */
-  .leg { padding-block: 36px 10px; scroll-margin-top: 64px; }
-  .leg-head { border-top: 4px dotted var(--teal); padding-top: 16px; }
-  .leg-num {
-    font-family: var(--fmono);
-    font-size: .74rem;
-    letter-spacing: .08em;
-    color: var(--pink);
-    text-transform: uppercase;
-    font-weight: 700;
+  /* ---------- Today card ---------- */
+  .banner {
+    border: 2px solid var(--ink);
+    border-radius: 14px;
+    background: var(--sun);
+    padding: 9px 12px;
+    font-weight: 800;
+    text-align: center;
   }
-  .leg h2 {
-    font-family: var(--fdisplay);
-    font-weight: 400;
-    font-size: clamp(2rem, 9vw, 3rem);
-    line-height: 1;
-    margin: 8px 0 2px;
-    color: var(--coral);
+  .now {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(140deg, var(--orange) 0%, var(--pink) 100%);
+    border: 2.5px solid var(--ink);
+    border-radius: 26px;
+    box-shadow: 6px 6px 0 var(--ink);
+    padding: 18px 18px 16px;
+  }
+  .now::after {
+    /* a big sun on the horizon */
+    content: "";
+    position: absolute;
+    right: -46px; top: -46px;
+    width: 150px; height: 150px;
+    border-radius: 50%;
+    background: var(--sun);
+    border: 2.5px solid var(--ink);
+    opacity: .9;
+    pointer-events: none;
+  }
+  .now > * { position: relative; z-index: 1; }
+  .now-kicker { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .flag {
+    background: var(--ink);
+    color: #fff;
+    border-radius: 7px;
+    padding: 3px 7px;
+    font: 700 .62rem/1.3 var(--mono);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+  .now h2 {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: clamp(2rem, 9vw, 2.6rem);
+    line-height: .95;
+    letter-spacing: -.045em;
+    margin: 8px 0 6px;
+    max-width: 13ch;
     text-wrap: balance;
   }
-  .leg h2 a { color: inherit; text-decoration: none; }
-  .leg h2 a:hover { color: var(--pink); }
-  .leg .hotel {
-    color: var(--muted);
-    font-size: .95rem;
-    margin: 4px 0 0;
-    font-weight: 600;
-  }
-  .leg .hotel strong { color: var(--ink); font-weight: 800; }
-  .leg .hotel a { color: inherit; }
-  .stay-strip {
+  .where { display: flex; align-items: center; gap: 6px; font-weight: 800; font-size: 1rem; }
+  .where svg { width: 18px; height: 18px; }
+  .plan { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 8px; }
+  .plan li {
     display: flex;
-    flex-wrap: wrap;
-    gap: 6px 8px;
-    margin: 14px 0 4px;
+    align-items: baseline;
+    gap: 10px;
+    background: var(--card);
+    border: 2px solid var(--ink);
+    border-radius: 14px;
+    padding: 10px 12px;
+    font-weight: 650;
+    line-height: 1.35;
   }
-  .stay-strip span {
-    font-family: var(--fmono);
-    font-size: .7rem;
+  .lab {
+    flex: 0 0 auto;
+    border: 1.5px solid var(--ink);
+    border-radius: 7px;
+    padding: 4px 6px;
+    font: 700 .58rem/1 var(--mono);
+    letter-spacing: .08em;
     text-transform: uppercase;
-    letter-spacing: .02em;
-    background: var(--teal-soft);
-    color: var(--teal);
-    border-radius: 999px;
-    padding: 4px 11px;
-    font-weight: 700;
+    position: relative;
+    top: -1px;
   }
+  .lab.b { background: var(--sun); }
+  .lab.i { background: var(--card); }
+  .lab.h { background: var(--sky); }
+  .tonight {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+    font-weight: 800;
+    font-size: .95rem;
+  }
+  .tonight svg { width: 18px; height: 18px; flex: 0 0 auto; }
+  .tonight a { text-decoration-thickness: 2px; text-underline-offset: 3px; }
 
-  .sect-label {
-    font-family: var(--fmono);
-    font-size: .76rem;
-    letter-spacing: .1em;
+  /* ---------- Up next / route / bucket ---------- */
+  .card-plain {
+    background: var(--card);
+    border: 2.5px solid var(--ink);
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    padding: 14px 16px;
+  }
+  .upnext { display: flex; align-items: center; gap: 12px; }
+  .upnext .ico-box {
+    flex: 0 0 auto;
+    width: 46px; height: 46px;
+    border-radius: 14px;
+    border: 2px solid var(--ink);
+    background: var(--sun);
+    display: grid; place-items: center;
+    transform: rotate(-5deg);
+  }
+  .upnext .ico-box svg { width: 26px; height: 26px; }
+  .upnext b { display: block; font-size: 1.05rem; line-height: 1.2; }
+  .upnext .mono { color: var(--ink-2); }
+
+  .route { display: grid; grid-template-columns: 1fr 16px 1fr 16px 1fr; align-items: center; gap: 4px; }
+  .stop {
+    border: 2px solid var(--ink);
+    border-radius: 14px;
+    background: var(--card);
+    padding: 9px 4px 8px;
+    text-align: center;
+    font-weight: 800;
+    font-size: .88rem;
+    line-height: 1.1;
+    min-width: 0;
+  }
+  .stop small { display: block; margin-top: 4px; font: 700 .56rem/1.2 var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--ink-2); }
+  .stop.here { background: var(--c); color: var(--on); box-shadow: 3px 3px 0 var(--ink); transform: translateY(-2px); }
+  .stop.here small { color: inherit; opacity: .85; }
+  .stop.past { opacity: .55; }
+  .link { height: 0; border-top: 2.5px dashed var(--ink); }
+  .link.done { border-top-style: solid; }
+
+  .bucket {
+    width: 100%;
+    text-align: left;
+    background: var(--lime);
+    border: 2.5px solid var(--ink);
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    padding: 14px 16px;
+    display: grid;
+    gap: 9px;
+    cursor: pointer;
+  }
+  .bucket-row { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+  .bucket-row b { font-family: var(--display); font-size: 1.3rem; letter-spacing: -.03em; }
+  .bar { height: 14px; border: 2px solid var(--ink); border-radius: 99px; background: var(--card); overflow: hidden; }
+  .bar i { display: block; height: 100%; width: 0; background: var(--ink); transition: width .3s; }
+
+  /* ---------- Explore filters ---------- */
+  .filters {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--paper);
+    padding: calc(env(safe-area-inset-top, 0px) + 10px) 0 6px;
+    margin-top: -10px;
+    display: grid;
+    gap: 10px;
+  }
+  .seg {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border: 2.5px solid var(--ink);
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--card);
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+  .seg button {
+    border: 0;
+    border-right: 2px solid var(--ink);
+    background: none;
+    padding: 10px 2px;
+    font-weight: 800;
+    font-size: .84rem;
+    cursor: pointer;
+    min-width: 0;
+  }
+  .seg button:last-child { border-right: 0; }
+  .seg button[aria-pressed="true"] { background: var(--ink); color: #fff; }
+  .chips { display: flex; gap: 8px; overflow-x: auto; padding: 2px 4px 6px; margin: 0 -4px; scrollbar-width: none; }
+  .chips::-webkit-scrollbar { display: none; }
+  .chip {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 2px solid var(--ink);
+    border-radius: 999px;
+    background: var(--card);
+    padding: 6px 12px 6px 9px;
+    font-weight: 750;
+    font-size: .86rem;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .chip svg { width: 16px; height: 16px; }
+  .chip[aria-pressed="true"] { background: var(--c, var(--ink)); color: var(--on, #fff); box-shadow: 2px 2px 0 var(--ink); }
+  .count { color: var(--ink-2); margin: 0 0 -6px; }
+
+  /* ---------- Activity cards ---------- */
+  .list { display: grid; gap: 16px; }
+  .act {
+    position: relative;
+    background: var(--card);
+    border: 2.5px solid var(--ink);
+    border-radius: 22px;
+    box-shadow: var(--shadow);
+    padding: 14px 14px 12px;
+  }
+  .act-head { display: flex; align-items: flex-start; gap: 12px; }
+  .badge {
+    flex: 0 0 auto;
+    width: 46px; height: 46px;
+    border-radius: 14px;
+    border: 2px solid var(--ink);
+    background: var(--c);
+    color: var(--on);
+    display: grid; place-items: center;
+    transform: rotate(-5deg);
+  }
+  .badge svg { width: 25px; height: 25px; }
+  .act-title { flex: 1; min-width: 0; padding-top: 1px; }
+  .act h3 {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 1.2rem;
+    line-height: 1.1;
+    letter-spacing: -.025em;
+    margin: 0 0 4px;
+    text-wrap: balance;
+  }
+  .act h3 a {
+    text-decoration: none;
+    background-image: linear-gradient(var(--c), var(--c));
+    background-size: 100% .28em;
+    background-position: 0 92%;
+    background-repeat: no-repeat;
+  }
+  .act-meta { margin: 0; color: var(--ink-2); }
+  .heart {
+    flex: 0 0 auto;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    border: 2px solid var(--ink);
+    background: var(--card);
+    display: grid; place-items: center;
+    cursor: pointer;
+    transition: transform .12s;
+  }
+  .heart svg { width: 22px; height: 22px; fill: none; }
+  .heart[aria-pressed="true"] { background: var(--pink); }
+  .heart[aria-pressed="true"] svg { fill: #fff; }
+  .heart:active, .done-btn:active, .day:active, .chip:active { transform: scale(.94); }
+  .act-blurb { margin: 10px 0 0; font-size: .98rem; color: #2B2D3B; }
+  .act-foot { display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; margin-top: 12px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; min-width: 0; }
+  .tag {
+    border: 1.5px solid var(--ink);
+    border-radius: 7px;
+    padding: 4px 7px;
+    background: var(--card);
+    font: 700 .58rem/1.25 var(--mono);
+    letter-spacing: .06em;
     text-transform: uppercase;
-    color: var(--pink);
-    margin: 30px 0 14px;
+    white-space: nowrap;
+  }
+  .tag.booked { background: var(--sun); }
+  .tag.inc { background: var(--mint); }
+  .tag.photo { background: var(--pink-soft); }
+  .tag.teen { background: var(--cobalt); color: #fff; }
+  .tag.note { border-style: dashed; white-space: normal; }
+  .done-btn {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    border: 2px solid var(--ink);
+    border-radius: 12px;
+    background: var(--card);
+    padding: 7px 11px 7px 9px;
+    font-weight: 800;
+    font-size: .84rem;
+    cursor: pointer;
+    transition: transform .12s;
+  }
+  .done-btn svg { width: 16px; height: 16px; }
+  .done-btn[aria-pressed="true"] { background: var(--ink); color: #fff; }
+  .act.is-done { background: #F4F2EC; }
+  .act.is-done .act-head, .act.is-done .act-blurb { opacity: .5; }
+  .act.is-done::after {
+    content: "DONE!";
+    position: absolute;
+    right: 20px; top: 46%;
+    transform: rotate(-13deg);
+    font: 800 1.5rem/1 var(--display);
+    letter-spacing: .04em;
+    color: var(--stamp);
+    border: 3px solid var(--stamp);
+    border-radius: 10px;
+    padding: 4px 10px;
+    background: rgba(255, 255, 255, .75);
+    pointer-events: none;
+  }
+  .empty {
+    text-align: center;
+    border: 2.5px dashed var(--ink);
+    border-radius: 22px;
+    background: var(--card);
+    padding: 22px 18px;
+    font-weight: 650;
+  }
+  .empty svg { width: 86px; height: 90px; display: block; margin: 0 auto 8px; }
+
+  /* ---------- Eats / Info ---------- */
+  .group-h { display: flex; align-items: center; gap: 8px; margin: 6px 0 -6px; font-weight: 800; }
+  .group-h i { width: 12px; height: 12px; border-radius: 50%; background: var(--c); border: 2px solid var(--ink); }
+  .hotel { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start; }
+  .num {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    border: 2px solid var(--ink);
+    background: var(--c);
+    color: var(--on);
+    display: grid; place-items: center;
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 1.15rem;
+  }
+  .hotel h3 { margin: 0; font-family: var(--display); font-weight: 800; font-size: 1.15rem; letter-spacing: -.02em; line-height: 1.15; }
+  .hotel h3 a { text-decoration-thickness: 2px; text-underline-offset: 3px; }
+  .hotel p { margin: 4px 0 0; color: var(--ink-2); font-size: .93rem; }
+  .hotel .mono { color: var(--ink); }
+  .know { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+  .know li { display: grid; grid-template-columns: 30px 1fr; gap: 10px; align-items: start; font-size: .95rem; line-height: 1.4; }
+  .know svg { width: 22px; height: 22px; margin-top: 1px; }
+  .know b { font-weight: 800; }
+  details.top10 {
+    background: var(--card);
+    border: 2.5px solid var(--ink);
+    border-radius: 18px;
+    box-shadow: 3px 3px 0 var(--ink);
+    overflow: hidden;
+  }
+  details.top10 summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 13px 16px;
+    font-weight: 800;
     display: flex;
     align-items: center;
     gap: 10px;
-    font-weight: 700;
   }
-  .sect-label::after {
-    content: "";
-    flex: 1;
-    height: 2px;
-    background: repeating-linear-gradient(90deg, var(--line) 0 8px, transparent 8px 14px);
-  }
-
-  /* ---- Activity cards ---- */
-  .cards { display: grid; gap: 14px; }
-  .card {
-    background: var(--surface);
-    border: 2px solid var(--line);
-    border-radius: 18px;
-    padding: 16px 17px;
-    min-width: 0;
-  }
-  .card.star { border-color: var(--yellow); box-shadow: 0 4px 0 var(--yellow); }
-  .card h3 {
-    font-family: var(--fbody);
-    font-weight: 800;
-    font-size: 1.1rem;
-    margin: 0 0 5px;
-    display: flex;
+  details.top10 summary::-webkit-details-marker { display: none; }
+  details.top10 summary i { width: 12px; height: 12px; border-radius: 50%; background: var(--c); border: 2px solid var(--ink); flex: 0 0 auto; }
+  details.top10 summary::after { content: "+"; margin-left: auto; font: 800 1.4rem/1 var(--display); }
+  details.top10[open] summary::after { content: "–"; }
+  details.top10 ol { list-style: none; margin: 0; padding: 0 16px 12px; counter-reset: n; }
+  details.top10 li {
+    counter-increment: n;
+    display: grid;
+    grid-template-columns: 30px 1fr;
     align-items: baseline;
-    gap: 8px;
-    flex-wrap: wrap;
+    padding: 8px 0;
+    border-top: 1.5px dashed rgba(27, 29, 42, .2);
   }
-  .card h3 a {
-    color: inherit;
-    text-decoration: underline;
-    text-decoration-color: var(--coral);
-    text-decoration-thickness: 2px;
-    text-underline-offset: 3px;
-  }
-  .card h3 a:hover { color: var(--coral); }
-  .card h3 .ico {
-    flex: 0 0 auto;
-    width: 34px; height: 34px;
-    padding: 7px;
-    border-radius: 50%;
-    background: var(--teal-soft);
-    color: var(--teal);
-    align-self: center;
-  }
-  .card.star h3 .ico { background: color-mix(in srgb, var(--yellow) 34%, transparent); color: #a9710a; }
-  .card h3 .tag {
-    font-family: var(--fmono);
-    font-size: .62rem;
-    letter-spacing: .04em;
-    text-transform: uppercase;
-    padding: 3px 8px;
-    border-radius: 999px;
-    font-weight: 700;
-    white-space: nowrap;
-  }
-  .tag.kids { background: var(--teal-soft); color: var(--teal); }
-  .tag.must { background: color-mix(in srgb, var(--yellow) 32%, transparent); color: #a9710a; }
-  .tag.easy { background: var(--green-soft); color: var(--green); }
-  .tag.eat { background: color-mix(in srgb, var(--pink) 20%, transparent); color: var(--pink); }
-  .card p { margin: 0; color: var(--muted); font-size: .95rem; font-weight: 600; }
-  .card .need {
-    margin-top: 9px;
-    font-family: var(--fmono);
-    font-size: .72rem;
-    color: var(--ink);
-    display: flex;
-    gap: 7px;
-    flex-wrap: wrap;
-    font-weight: 700;
-  }
-  .card .need b { color: var(--coral); font-weight: 700; }
+  details.top10 li::before { content: counter(n); font: 800 1.05rem var(--display); }
+  details.top10 li a { font-weight: 700; text-decoration: none; }
+  details.top10 .src { display: block; padding: 0 16px 14px; color: var(--ink-2); }
+  .foot { text-align: center; color: var(--ink-2); padding: 8px 0 4px; }
+  .foot svg { width: 64px; height: 68px; display: block; margin: 0 auto 6px; }
 
-  /* ---- TripAdvisor top 10 ---- */
-  .top10 {
-    list-style: none;
-    counter-reset: t;
-    margin: 0;
-    padding: 0;
+  /* ---------- Bottom tabs ---------- */
+  .tabs {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    z-index: 20;
+    background: var(--card);
+    border-top: 2.5px solid var(--ink);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    padding-left: max(10px, env(safe-area-inset-left, 0px));
+    padding-right: max(10px, env(safe-area-inset-right, 0px));
+  }
+  .tabs .in { max-width: 560px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; padding: 8px 0; }
+  .tab {
+    border: 2px solid transparent;
+    background: none;
+    border-radius: 14px;
+    padding: 6px 2px 5px;
     display: grid;
-    gap: 2px;
-    background: var(--line);
-    border: 2px solid var(--line);
-    border-radius: 18px;
-    overflow: hidden;
-  }
-  .top10 li {
-    counter-increment: t;
-    background: var(--surface);
-    display: grid;
-    grid-template-columns: 1.9em 1fr;
-    gap: 10px;
-    align-items: baseline;
-    padding: 11px 14px;
-  }
-  .top10 li::before {
-    content: counter(t);
-    font-family: var(--fdisplay);
-    font-size: 1rem;
-    color: var(--teal);
-  }
-  .top10 a {
-    color: inherit;
-    text-decoration: none;
+    justify-items: center;
+    gap: 1px;
     font-weight: 800;
-    font-size: .98rem;
-  }
-  .top10 a:hover { color: var(--coral); text-decoration: underline; }
-  .src {
-    margin: 10px 0 0;
-    font-family: var(--fmono);
-    font-size: .72rem;
-    color: var(--muted);
-    font-weight: 700;
-  }
-
-  /* ---- Notes ---- */
-  .notes {
-    background: var(--teal);
-    color: #fff;
-    border-radius: 22px;
-    padding: 26px 20px;
-    margin-block: 40px 20px;
-  }
-  .notes h2 {
-    font-family: var(--fdisplay);
-    font-weight: 400;
-    font-size: 2rem;
-    margin: 0 0 16px;
-    color: var(--yellow);
-    text-shadow: 2px 2px 0 rgba(0,0,0,.18);
-  }
-  .notes ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 12px; }
-  .notes li {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 12px;
-    font-size: .95rem;
-    line-height: 1.45;
-    font-weight: 600;
-  }
-  .notes li .k {
-    font-family: var(--fmono);
-    font-size: .66rem;
-    letter-spacing: .04em;
-    text-transform: uppercase;
-    background: rgba(255,255,255,.22);
-    padding: 4px 9px;
-    border-radius: 999px;
-    height: fit-content;
-    white-space: nowrap;
-    font-weight: 700;
-  }
-  .notes a { color: #fff; }
-
-  footer {
-    text-align: center;
-    color: var(--muted);
-    font-family: var(--fmono);
     font-size: .74rem;
-    letter-spacing: .03em;
-    padding-block: 26px 40px;
-    font-weight: 700;
+    color: var(--ink-2);
+    cursor: pointer;
   }
+  .tab svg { width: 24px; height: 24px; }
+  .tab[aria-current="page"] { background: var(--sun); border-color: var(--ink); color: var(--ink); box-shadow: 2px 2px 0 var(--ink); }
 
-  @media (max-width: 420px) {
-    .notes li { grid-template-columns: 1fr; gap: 4px; }
+  @media (max-width: 370px) {
+    .seg button { font-size: .76rem; }
+    .stop { font-size: .8rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
   }
 </style>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rye&family=Nunito:wght@600;700;800&family=Space+Mono:wght@400;700&display=swap">
+</head>
+<body>
 
-<!-- Activity icon sprite (line icons, inherit currentColor) -->
+<!-- Icon sprite + the dog. Gradients live here, so this svg is sized 0, never display:none. -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
-    <g id="i-base" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></g>
+    <linearGradient id="coat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0bd71"/><stop offset="1" stop-color="#d7923f"/></linearGradient>
+    <linearGradient id="ear" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bb7d3d"/><stop offset=".55" stop-color="#9c5f28"/><stop offset="1" stop-color="#7a481d"/></linearGradient>
+    <linearGradient id="muz" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f9e4bd"/><stop offset="1" stop-color="#ecc994"/></linearGradient>
+    <linearGradient id="hat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b17c3a"/><stop offset="1" stop-color="#875726"/></linearGradient>
   </defs>
-  <symbol id="i-bbq" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <circle cx="12" cy="13" r="7"/><path d="M5.5 13h13M12 7v12M8 19.5l-1.5 2.5M16 19.5l1.5 2.5"/>
-  </symbol>
-  <symbol id="i-fish" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M15 12c0 3-3 6-7 6-3 0-5-2-6-4 2-1 2-3 0-4 1-2 3-4 6-4 4 0 7 3 7 6z"/><path d="M15 12l6-4v8z"/><circle cx="8.5" cy="10.5" r="1" fill="currentColor"/>
-  </symbol>
-  <symbol id="i-cactus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M12 21V7M12 12c-3 0-3-3-3-4M9 8v3M12 14c3 0 3-2 3-3M15 9v3M9 21h6"/>
-  </symbol>
-  <symbol id="i-music" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M9 18V5l10-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/>
-  </symbol>
-  <symbol id="i-water" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M3 8c2-2 4 2 6 0s4-2 6 0 4 2 6 0M3 14c2-2 4 2 6 0s4-2 6 0 4 2 6 0M3 20c2-2 4 2 6 0s4-2 6 0 4 2 6 0"/>
-  </symbol>
-  <symbol id="i-balloon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M12 3a6 6 0 0 1 6 6c0 4-4 7-6 8-2-1-6-4-6-8a6 6 0 0 1 6-6z"/><path d="M10 17l1 3h2l1-3M11 20h2v2h-2z"/>
-  </symbol>
-  <symbol id="i-compass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/>
-  </symbol>
-  <symbol id="i-mountains" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M2 20l6-10 4 6 3-4 7 8z"/><circle cx="17" cy="6" r="2"/>
-  </symbol>
-  <symbol id="i-shop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M4 9l1.5-4h13L20 9M4 9v10h16V9M4 9h16M9 19v-5h5v5"/>
-  </symbol>
-  <symbol id="i-museum" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M3 10l9-6 9 6M4 10v9M20 10v9M3 20h18M8 20v-7M12 20v-7M16 20v-7"/>
-  </symbol>
-  <symbol id="i-plane" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M21 3L3 10l7 3 3 7z"/><path d="M21 3l-11 11"/>
-  </symbol>
-  <symbol id="i-target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/>
-  </symbol>
-  <symbol id="i-telescope" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M4 16l11-9 3 2-9 11z"/><path d="M4 16l-1 4M9 18l-1 3M14 7l1.5 2"/>
-  </symbol>
-  <symbol id="i-horseshoe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M7 21c-3-2-4-5-4-9a9 9 0 0 1 18 0c0 4-1 7-4 9"/><circle cx="6" cy="18.5" r="1" fill="currentColor"/><circle cx="18" cy="18.5" r="1" fill="currentColor"/><circle cx="4.5" cy="12.5" r="1" fill="currentColor"/><circle cx="19.5" cy="12.5" r="1" fill="currentColor"/>
-  </symbol>
-  <symbol id="i-paw" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-    <circle cx="7" cy="9" r="2"/><circle cx="12" cy="7" r="2"/><circle cx="17" cy="9" r="2"/><path d="M12 11c-3 0-5 2-5 4.5C7 18 9 19 12 19s5-1 5-3.5C17 13 15 11 12 11z"/>
-  </symbol>
-  <symbol id="i-bike" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <circle cx="6" cy="17" r="3.5"/><circle cx="18" cy="17" r="3.5"/><path d="M6 17l4-8h6M10 9l4 8M14 7h3"/>
-  </symbol>
-  <symbol id="i-crater" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <ellipse cx="12" cy="14" rx="9" ry="4.5"/><ellipse cx="12" cy="13" rx="4" ry="1.8"/>
-  </symbol>
-  <symbol id="i-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M12 3l2.6 6.3 6.8.5-5.2 4.4 1.7 6.6L12 17.7 6.3 21.3 8 14.7 2.8 10.3l6.8-.5z"/>
-  </symbol>
-</svg>
 
-<header class="wrap hero">
-  <!-- Logo: a smiling cocker spaniel in a cowboy hat -->
-  <svg class="logo" viewBox="0 0 200 212" role="img" aria-label="Smiling cocker spaniel wearing a cowboy hat">
-    <defs>
-      <linearGradient id="coat" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#f0bd71"/><stop offset="1" stop-color="#d7923f"/>
-      </linearGradient>
-      <linearGradient id="ear" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#bb7d3d"/><stop offset=".55" stop-color="#9c5f28"/><stop offset="1" stop-color="#7a481d"/>
-      </linearGradient>
-      <linearGradient id="muz" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#f9e4bd"/><stop offset="1" stop-color="#ecc994"/>
-      </linearGradient>
-      <linearGradient id="hat" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#b17c3a"/><stop offset="1" stop-color="#875726"/>
-      </linearGradient>
-    </defs>
-    <!-- feathered ears (behind the head) -->
+  <symbol id="dog" viewBox="0 0 200 212">
     <path d="M78 84 C48 86 26 112 30 148 Q32 172 43 188 Q49 180 55 188 Q61 178 68 186 Q76 150 80 118 C82 98 84 88 78 84 Z" fill="url(#ear)"/>
     <path d="M122 84 C152 86 174 112 170 148 Q168 172 157 188 Q151 180 145 188 Q139 178 132 186 Q124 150 120 118 C118 98 116 88 122 84 Z" fill="url(#ear)"/>
     <path d="M70 100 Q58 128 62 160" fill="none" stroke="#6b3f1a" stroke-width="2.4" stroke-linecap="round" opacity=".5"/>
     <path d="M130 100 Q142 128 138 160" fill="none" stroke="#6b3f1a" stroke-width="2.4" stroke-linecap="round" opacity=".5"/>
-    <!-- chest feathering -->
     <path d="M72 182 Q86 206 100 197 Q114 206 128 182 Q113 191 100 189 Q87 191 72 182 Z" fill="url(#coat)"/>
-    <!-- head -->
     <path d="M100 70 C133 70 153 97 153 129 C153 166 128 190 100 190 C72 190 47 166 47 129 C47 97 67 70 100 70 Z" fill="url(#coat)"/>
-    <!-- topknot tuft -->
     <path d="M86 76 Q94 62 100 74 Q106 62 114 76 Q106 72 100 80 Q94 72 86 76 Z" fill="#e3a858"/>
-    <!-- muzzle -->
     <path d="M100 133 C121 133 134 148 134 161 C134 176 119 186 100 186 C81 186 66 176 66 161 C66 148 79 133 100 133 Z" fill="url(#muz)"/>
-    <!-- cheek blush -->
     <circle cx="67" cy="159" r="7.5" fill="#f2909f" opacity=".5"/>
     <circle cx="133" cy="159" r="7.5" fill="#f2909f" opacity=".5"/>
-    <!-- cute raised brows -->
     <path d="M70 104 Q80 99 90 104" fill="none" stroke="#9c5f28" stroke-width="2.6" stroke-linecap="round"/>
     <path d="M110 104 Q120 99 130 104" fill="none" stroke="#9c5f28" stroke-width="2.6" stroke-linecap="round"/>
-    <!-- simple fun cartoon eyes (centred, no glints) -->
     <circle cx="82" cy="120" r="13.5" fill="#fff" stroke="#2a1a0e" stroke-width="2.5"/>
     <circle cx="118" cy="120" r="13.5" fill="#fff" stroke="#2a1a0e" stroke-width="2.5"/>
     <circle cx="82" cy="122" r="7.5" fill="#241610"/>
     <circle cx="118" cy="122" r="7.5" fill="#241610"/>
-    <!-- nose -->
     <path d="M89 145 Q100 139 111 145 Q117 152 108 158 Q100 163 92 158 Q83 152 89 145 Z" fill="#231812"/>
     <ellipse cx="94" cy="149" rx="3" ry="2" fill="#5c4634" opacity=".8"/>
-    <!-- smile + tongue -->
     <path d="M100 160 Q100 170 89 171" fill="none" stroke="#3a2414" stroke-width="3" stroke-linecap="round"/>
     <path d="M100 160 Q100 170 111 171" fill="none" stroke="#3a2414" stroke-width="3" stroke-linecap="round"/>
     <path d="M89 164 Q87 196 100 196 Q113 196 111 164 Z" fill="#ef6a86"/>
     <path d="M100 166 L100 191" stroke="#d4485f" stroke-width="1.8" stroke-linecap="round"/>
-    <!-- cowboy hat: swept brim + cattleman-creased crown, jaunty tilt -->
     <g transform="rotate(-6 100 52)">
-      <!-- soft brim shadow on the forehead -->
       <ellipse cx="100" cy="86" rx="50" ry="7" fill="#9a6730" opacity=".25"/>
-      <!-- brim, sides swept up and front dipped -->
       <path d="M16 74 Q40 56 54 64 Q78 76 100 76 Q122 76 146 64 Q160 56 184 74 Q160 96 100 96 Q40 96 16 74 Z" fill="url(#hat)"/>
       <path d="M16 74 Q40 56 54 64 Q78 76 100 76 Q122 76 146 64 Q160 56 184 74" fill="none" stroke="#6f4a22" stroke-width="2" opacity=".45"/>
-      <!-- creased crown -->
       <path d="M60 72 Q57 34 66 27 Q73 22 79 30 Q85 20 92 28 Q100 20 108 28 Q115 20 121 30 Q127 22 134 27 Q143 34 140 72 Q100 62 60 72 Z" fill="url(#hat)"/>
-      <!-- crown shading -->
       <path d="M60 72 Q57 34 66 27 Q70 42 70 70 Q64 71 60 72 Z" fill="#9a6730" opacity=".45"/>
       <path d="M140 72 Q143 34 134 27 Q130 42 130 70 Q136 71 140 72 Z" fill="#6f4a22" opacity=".4"/>
       <path d="M100 27 Q98 48 100 64" fill="none" stroke="#6f4a22" stroke-width="2" opacity=".4"/>
-      <!-- leather band + stitch -->
       <path d="M60 64 Q100 56 140 64 L139 72 Q100 64 61 72 Z" fill="#53341a"/>
       <path d="M62 66 Q100 59 138 66" fill="none" stroke="#caa25f" stroke-width="1" opacity=".55"/>
-      <!-- star concho -->
       <path d="M100 58 l2.6 5.3 5.8 .8 -4.2 4.1 1 5.8 -5.2 -2.8 -5.2 2.8 1 -5.8 -4.2 -4.1 5.8 -.8 z" fill="#ffce5c" stroke="#b9821f" stroke-width=".6"/>
     </g>
-  </svg>
-  <p class="eyebrow">Yeehaw · Oct 17 – 28, 2026</p>
-  <h1>Howdy Davies!<span class="sub">The Arizona Family Road Trip</span></h1>
-</header>
+  </symbol>
 
-<nav class="chips">
-  <div class="wrap inner">
-    <a href="#scottsdale">① Scottsdale</a>
-    <a href="#flagstaff">② Flagstaff</a>
-    <a href="#tucson">③ Tucson Ranch</a>
-    <a href="#notes">Good to know</a>
+  <symbol id="i-bbq" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="7"/><path d="M5.5 12h13M12 5.5v13M8 18.5 6.5 22M16 18.5l1.5 3.5M9 2.5c-.6.8-.6 1.5 0 2.2M12 1.8c-.6.9-.6 1.8 0 2.6M15 2.5c-.6.8-.6 1.5 0 2.2"/></symbol>
+  <symbol id="i-fish" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 12c0 3-3 6-7 6-3 0-5-2-6-4 2-1 2-3 0-4 1-2 3-4 6-4 4 0 7 3 7 6z"/><path d="M15 12l6-4v8z"/><circle cx="8.5" cy="10.5" r="1" fill="currentColor"/></symbol>
+  <symbol id="i-cactus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V5M12 12c-3 0-3-3-3-4M9 8v3M12 14c3 0 3-2 3-3M15 9v3M8 21h8"/></symbol>
+  <symbol id="i-music" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l10-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></symbol>
+  <symbol id="i-water" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8c2-2 4 2 6 0s4-2 6 0 4 2 6 0M3 14c2-2 4 2 6 0s4-2 6 0 4 2 6 0M3 20c2-2 4 2 6 0s4-2 6 0 4 2 6 0"/></symbol>
+  <symbol id="i-balloon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5a6.5 6.5 0 0 1 6.5 6.5c0 4-4 7-6.5 8-2.5-1-6.5-4-6.5-8A6.5 6.5 0 0 1 12 2.5z"/><path d="M12 2.5c-2 2-2.5 4-2.5 6.5s1 5.5 2.5 8M12 2.5c2 2 2.5 4 2.5 6.5s-1 5.5-2.5 8M10.5 17l.5 2.5h2l.5-2.5M10.5 19.5h3V22h-3z"/></symbol>
+  <symbol id="i-compass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></symbol>
+  <symbol id="i-mountains" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20l6-10 4 6 3-4 7 8z"/><circle cx="17" cy="6" r="2"/></symbol>
+  <symbol id="i-shop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9l1.5-4h13L20 9M4 9v10h16V9M4 9h16M9 19v-5h5v5"/></symbol>
+  <symbol id="i-bag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1 13H6z"/><path d="M9 10V6a3 3 0 0 1 6 0v4"/></symbol>
+  <symbol id="i-museum" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10l9-6 9 6M4 10v9M20 10v9M3 20h18M8 20v-7M12 20v-7M16 20v-7"/></symbol>
+  <symbol id="i-plane" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3L3 10l7 3 3 7z"/><path d="M21 3l-11 10"/></symbol>
+  <symbol id="i-target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></symbol>
+  <symbol id="i-telescope" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15l11-9 3 3.5L8 18z"/><path d="M10 16.5 8 22M10 16.5l3 5.5M19 3l.6 1.4L21 5l-1.4.6L19 7l-.6-1.4L17 5l1.4-.6z"/></symbol>
+  <symbol id="i-horseshoe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 21c-3-2-4-5-4-9a9 9 0 0 1 18 0c0 4-1 7-4 9"/><circle cx="6" cy="18.5" r="1" fill="currentColor"/><circle cx="18" cy="18.5" r="1" fill="currentColor"/><circle cx="4.5" cy="12.5" r="1" fill="currentColor"/><circle cx="19.5" cy="12.5" r="1" fill="currentColor"/></symbol>
+  <symbol id="i-paw" viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="6.5" cy="9.5" r="2"/><circle cx="10" cy="6" r="2"/><circle cx="14" cy="6" r="2"/><circle cx="17.5" cy="9.5" r="2"/><path d="M12 11c-3 0-5.5 3-5.5 5.5 0 2 1.5 3 3 3 1 0 1.5-.6 2.5-.6s1.5.6 2.5.6c1.5 0 3-1 3-3C17.5 14 15 11 12 11z"/></symbol>
+  <symbol id="i-bike" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="17" r="3.5"/><circle cx="18" cy="17" r="3.5"/><path d="M6 17l4-8h6M10 9l4 8M14 6h3l1 3"/></symbol>
+  <symbol id="i-crater" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="15" rx="9.5" ry="4.5"/><ellipse cx="12" cy="14" rx="4" ry="1.8"/><path d="M17 3l-3 5M20 5l-3 3"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.6 6.3 6.8.5-5.2 4.4 1.7 6.6L12 17.7 6.3 21.3 8 14.7 2.8 10.3l6.8-.5z"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-torch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h8l-1.5 5h-5z"/><path d="M9.5 8h5v13h-5z"/><path d="M12 12v3M4 4l2 1M20 4l-2 1"/></symbol>
+  <symbol id="i-ghost" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V10a7 7 0 0 1 14 0v11l-2.3-1.8L14.3 21 12 19.2 9.7 21l-2.4-1.8z"/><circle cx="9.5" cy="10.5" r="1" fill="currentColor"/><circle cx="14.5" cy="10.5" r="1" fill="currentColor"/></symbol>
+  <symbol id="i-hat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 14.5c3 2.5 17 2.5 20 0"/><path d="M6.5 15c0-5 1.2-9 3-9 1 0 1.6 1 2.5 1s1.5-1 2.5-1c1.8 0 3 4 3 9"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.2"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7.5-4.6-7.5-10.2A4.2 4.2 0 0 1 12 7.3a4.2 4.2 0 0 1 7.5 2.5C19.5 15.4 12 20 12 20z"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.2"/></symbol>
+  <symbol id="i-car" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 16.5V12l2-5h13l2 5v4.5z"/><path d="M5.5 12h13"/><circle cx="7.5" cy="17" r="1.8"/><circle cx="16.5" cy="17" r="1.8"/></symbol>
+  <symbol id="i-hoodie" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4a4 4 0 0 1 8 0l4 3 1.5 6-3 1V21H5.5v-7l-3-1L4 7z"/><path d="M9.5 4.5c.5 2 4.5 2 5 0M10.5 8v3M13.5 8v3"/></symbol>
+  <symbol id="i-drop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-ticket" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a2 2 0 0 0 2-2h14a2 2 0 0 0 2 2v8a2 2 0 0 0-2 2H5a2 2 0 0 0-2-2z"/><path d="M13 6v12" stroke-dasharray="2 2.5"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5"/><path d="M11 18.5h2"/></symbol>
+</svg>
+
+<header class="wrap top">
+  <div class="brand">
+    <button class="sticker" id="dog" type="button" aria-label="Tap the dog for a tip">
+      <svg viewBox="0 0 200 212" role="img" aria-label="Smiling cocker spaniel in a cowboy hat"><use href="#dog"/></svg>
+    </button>
+    <div class="brand-text">
+      <p class="mono">Arizona road trip · Oct 2026</p>
+      <h1>Howdy <span class="hl">Davies</span></h1>
+    </div>
+    <div class="bubble" id="bubble" role="status" hidden></div>
   </div>
-</nav>
+</header>
 
 <main class="wrap">
 
-  <!-- ============ SCOTTSDALE ============ -->
-  <section class="leg" id="scottsdale">
-    <div class="leg-head">
-      <span class="leg-num">Leg 01 · Sat 17 – Wed 21 Oct</span>
-      <h2>Scottsdale</h2>
-      <p class="hotel"><strong><a href="https://www.google.com/maps/search/?api=1&amp;query=Hilton+Scottsdale+Resort+and+Villas" target="_blank" rel="noopener">Hilton Scottsdale Resort &amp; Villas</a></strong> · 2 queen beds, pool view · room only</p>
-    </div>
-    <div class="stay-strip">
-      <span>4 nights</span><span>Warm — 25–30°C days</span><span>City base</span>
-    </div>
-
-    <p class="sect-label">For the girls &amp; easy wins</p>
-    <div class="cards">
-      <div class="card star">
-        <h3><a href="https://www.google.com/maps/search/?api=1&amp;query=OdySea+Aquarium+Scottsdale" target="_blank" rel="noopener">OdySea Aquarium &amp; Butterfly Wonderland</a> <span class="tag must">Top pick</span> <span class="tag kids">Girls</span></h3>
-        <p>Biggest aquarium in the Southwest with a rotating underwater tunnel, plus a walk-through butterfly conservatory right next door. Do both in one visit — about 15 min from the hotel.</p>
-        <div class="need"><b>Plan:</b> half a day · book online</div>
-      </div>
-      <div class="card">
-        <h3><a href="https://www.google.com/maps/search/?api=1&amp;query=Desert+Botanical+Garden+Phoenix" target="_blank" rel="noopener">Desert Botanical Garden</a> <span class="tag easy">Easy stroll</span></h3>
-        <p>Flat looping trails through saguaros and desert wildflowers in Papago Park. Go late afternoon when it cools and the light turns gold.</p>
-        <div class="need"><b>Plan:</b> 2 hrs</div>
-      </div>
-      <div class="card star">
-        <h3><a href="https://www.google.com/maps/search/?api=1&amp;query=Musical+Instrument+Museum+Phoenix" target="_blank" rel="noopener">Musical Instrument Museum</a> <span class="tag must">Top pick</span> <span class="tag kids">Girls</span></h3>
-        <p>In north Phoenix (~25 min). Headphones trigger each exhibit to play as you walk up — genuinely a family favourite, easy to lose a few hours in.</p>
-        <div class="need"><b>Plan:</b> half a day</div>
-      </div>
-      <div class="card">
-        <h3>Resort pool day <span class="tag easy">On site</span></h3>
-        <p>The Hilton has a lazy river and waterslide. Build in at least one slow morning here between the bigger outings.</p>
-      </div>
-    </div>
-
-    <p class="sect-label">Desert &amp; the outdoors</p>
-    <div class="cards">
-      <div class="card">
-        <h3><a href="https://www.google.com/maps/search/?api=1&amp;query=Sonoran+Desert+jeep+tours+Scottsdale" target="_blank" rel="noopener">Sunrise desert jeep or horseback tour</a></h3>
-        <p>Guided rides into the Sonoran Desert from north Scottsdale. Early slots are cooler and the wildlife is out — a gentle warm-up before the ranch later in the trip.</p>
-        <div class="need"><b>Plan:</b> morning · pre-book</div>
-      </div>
-      <div class="card">
-        <h3><a href="https://www.google.com/maps/search/?api=1&amp;query=Pinnacle+Peak+Park+Scottsdale" target="_blank" rel="noopener">Pinnacle Peak Park</a> <span class="tag easy">Easy–moderate</span></h3>
-        <p>A well-made out-and-back trail with big valley views and shade ramadas. Friendlier than Camelback if you want views without a scramble.</p>
-        <div class="need"><b>Plan:</b> 2 hrs · go early</div>
-      </div>
-      <div class="card star">
-        <h3><a href="https://www.google.com/maps/search/?api=1&amp;query=hot+air+balloon+rides+Scottsdale" target="_blank" rel="noopener">Hot-air balloon at sunrise</a> <span class="tag must">Booked · Mon 19</span></h3>
-        <p>Already on the plan for Monday morning — drifting over the desert at first light. Bring warm layers; it's chilly before the sun's up, then glorious once it rises.</p>
-        <div class="need"><b>Booked:</b> Mon 19 Oct · sunrise</div>
-      </div>
-    </div>
-
-    <p class="sect-label">Town &amp; culture</p>
-    <div class="cards">
-      <div class="card">
-        <h3><a href="https://www.google.com/maps/search/?api=1&amp;query=Old+Town+Scottsdale" target="_blank" rel="noopener">Old Town Scottsdale</a></h3>
-        <p>Walkable blocks of galleries, Western-wear shops, sweet shops and restaurants. Easy evening wander with dinner — something for all four of you.</p>
-      </div>
-      <div class="card">
-        <h3><a href="https://www.google.com/maps/search/?api=1&amp;query=Taliesin+West+Scottsdale" target="_blank" rel="noopener">Taliesin West</a></h3>
-        <p>Frank Lloyd Wright's desert home and studio. Guided tours only; book ahead. One for a cooler late-afternoon slot.</p>
-        <div class="need"><b>Plan:</b> 90 min · guided</div>
-      </div>
-      <div class="card">
-        <h3><a href="https://www.google.com/maps/search/?api=1&amp;query=Heard+Museum+Phoenix" target="_blank" rel="noopener">Heard Museum</a> <span class="tag kids">Girls</span></h3>
-        <p>In Phoenix (~25 min) and widely rated the best Native American art and culture museum in the country. Beautiful courtyards, well paced for kids.</p>
-        <div class="need"><b>Plan:</b> half day</div>
-      </div>
-    </div>
-
-    <p class="sect-label">Aircraft &amp; the range</p>
-    <div class="cards">
-      <div class="card">
-        <h3><a href="https://www.google.com/maps/search/?api=1&amp;query=Commemorative+Air+Force+Airbase+Arizona+Mesa" target="_blank" rel="noopener">CAF Airbase Arizona</a> <span class="tag kids">Girls</span></h3>
-        <p>Commemorative Air Force warbird hangar in Mesa (~40 min) — walk among flying WWII bombers and fighters, with ride experiences if you want to go up.</p>
-        <div class="need"><b>Plan:</b> half day</div>
-      </div>
-      <div class="card">
-        <h3><a href="https://www.google.com/maps/search/?api=1&amp;query=Scottsdale+Gun+Club" target="_blank" rel="noopener">Scottsdale Gun Club — full-auto</a></h3>
-        <p>Indoor range that rents full-auto machine guns with an instructor on the lane. Minimum ages and ID rules apply and slots book up — call ahead to confirm what the whole family can do.</p>
-        <div class="need"><b>Note:</b> age/ID rules · book ahead</div>
-      </div>
-    </div>
-
-    <p class="sect-label">Texas-style BBQ</p>
-    <div class="cards">
-      <div class="card star">
-        <h3><a href="https://littlemissbbq.com/" target="_blank" rel="noopener">Little Miss BBQ</a> <span class="tag eat">Smoked meat</span> <span class="tag must">The one</span></h3>
-        <p>Central-Texas-style brisket, pork ribs and sausage in Phoenix — routinely called the best BBQ in Arizona. Lunch only and it sells out, so arrive before it opens and expect a queue. Worth it.</p>
-        <div class="need"><b>Go:</b> lunch · get there early</div>
-      </div>
-    </div>
-
-    <p class="sect-label">Top 10 on Tripadvisor</p>
-    <ol class="top10">
-      <li><a href="https://www.google.com/maps/search/?api=1&amp;query=Taliesin+West+Scottsdale" target="_blank" rel="noopener">Taliesin West</a></li>
-      <li><a href="https://www.google.com/maps/search/?api=1&amp;query=Old+Town+Scottsdale" target="_blank" rel="noopener">Old Town Scottsdale</a></li>
-      <li><a href="https://www.google.com/maps/search/?api=1&amp;query=OdySea+Aquarium+Scottsdale" target="_blank" rel="noopener">OdySea Aquarium</a></li>
-      <li><a href="https://www.google.com/maps/search/?api=1&amp;query=Butterfly+Wonderland+Scottsdale" target="_blank" rel="noopener">Butterfly Wonderland</a></li>
-      <li><a href="https://www.google.com/maps/search/?api=1&amp;query=Southwest+Wildlife+Conservation+Center+Scottsdale" target="_blank" rel="noopener">Southwest Wildlife Conservation Center</a></li>
-      <li><a href="https://www.google.com/maps/search/?api=1&amp;query=Western+Spirit+Scottsdale+Museum+of+the+West" target="_blank" rel="noopener">Western Spirit: Museum of the West</a></li>
-      <li><a href="https://www.google.com/maps/search/?api=1&amp;query=Desert+Botanical+Garden+Phoenix" target="_blank" rel="noopener">Desert Botanical Garden</a></li>
-      <li><a href="https://www.google.com/maps/search/?api=1&amp;query=McCormick+Stillman+Railroad+Park+Scottsdale" target="_blank" rel="noopener">McCormick-Stillman Railroad Park</a></li>
-      <li><a href="https://www.google.com/maps/search/?api=1&amp;query=Scottsdale+Museum+of+Contemporary+Art" target="_blank" rel="noopener">Scottsdale Museum of Contemporary Art</a></li>
-      <li><a href="https://www.google.com/maps/search/?api=1&amp;query=Museum+of+Illusions+Scottsdale" target="_blank" rel="noopener">Museum of Illusions</a></li>
-    </ol>
-    <p class="src">Live ranking — order shifts. <a href="https://www.tripadvisor.com/Attractions-g31350.html" target="_blank" rel="noopener">See it on Tripadvisor ↗</a></p>
+  <!-- ================= TODAY ================= -->
+  <section class="view" id="today" aria-label="Today">
+    <div class="days" id="days" role="tablist" aria-label="Trip days"></div>
+    <div class="banner" id="banner" hidden></div>
+    <article class="now" id="now" aria-live="polite"></article>
+    <div class="card-plain upnext" id="upnext" hidden></div>
+    <div class="route" id="route" aria-label="Route"></div>
+    <button class="bucket" type="button" data-go="explore">
+      <span class="bucket-row"><b>Bucket list</b><span class="mono" id="bucket-count"></span></span>
+      <span class="bar" aria-hidden="true"><i id="bucket-bar"></i></span>
+      <span class="mono" id="bucket-saved"></span>
+    </button>
   </section>
 
-  <!-- ============ FLAGSTAFF ============ -->
-  <section class="leg" id="flagstaff">
-    <div class="leg-head">
-      <span class="leg-num">Leg 02 · Wed 21 – Sat 24 Oct</span>
-      <h2>Flagstaff</h2>
-      <p class="hotel"><strong><a href="https://www.google.com/maps/search/?api=1&amp;query=Americana+Motor+Hotel+Flagstaff" target="_blank" rel="noopener">Americana Motor Hotel</a></strong> · large room, 2 queen beds · room only · on Route 66</p>
+  <!-- ================= EXPLORE ================= -->
+  <section class="view" id="explore" aria-label="Explore" hidden>
+    <div class="filters">
+      <div class="seg" id="seg" role="group" aria-label="Choose a stop"></div>
+      <div class="chips" id="chips" role="group" aria-label="Filter by vibe"></div>
     </div>
-    <div class="stay-strip">
-      <span>3 nights</span><span>High &amp; cool — 2,100 m</span><span>Day-trip hub</span>
-    </div>
-
-    <p class="sect-label">Day trips (all within easy reach)</p>
-    <div class="cards">
-      <div class="card star">
-        <h3><a href="https://www.google.com/maps/search/?api=1&amp;query=Grand+Canyon+South+Rim+Mather+Point" target="_blank" rel="noopener">Grand Canyon — South Rim</a> <span class="tag must">Booked</span></h3>
-        <p>Already on the plan — about 1.5 hrs north. Start at Mather Point, walk a stretch of the paved Rim Trail, then drive Desert View Drive for the watchtower. Wrap up warm — the rim is cold and windy in October.</p>
-        <div class="need"><b>Booked:</b> full day · layers</div>
-      </div>
-      <div class="card star">
-        <h3><a href="https://www.google.com/maps/search/?api=1&amp;query=Sedona+Arizona" target="_blank" rel="noopener">Sedona red rocks</a> <span class="tag must">Top pick</span></h3>
-        <p>~45 min south. Chapel of the Holy Cross, an easy loop at Bell Rock, and a Pink Jeep tour if you want the backcountry version. Stunning and not too far.</p>
-        <div class="need"><b>Plan:</b> full day</div>
-      </div>
-      <div class="card">
-        <h3><a href="https://www.google.com/maps/search/?api=1&amp;query=Bearizona+Williams+Arizona" target="_blank" rel="noopener">Williams &amp; Bearizona</a> <span class="tag kids">Girls</span></h3>
-        <p>Classic Route 66 town ~35 min west. Bearizona is a drive-through wildlife park — bears, wolves, bison from the car — then walk the baby-animal area. Grand Canyon Railway leaves from here too.</p>
-        <div class="need"><b>Plan:</b> half–full day</div>
-      </div>
-      <div class="card">
-        <h3><a href="https://www.google.com/maps/search/?api=1&amp;query=Jerome+Arizona" target="_blank" rel="noopener">Jerome</a></h3>
-        <p>A former mining town clinging to a hillside, now galleries, old saloons and valley views. Quirky half-day, often paired with Sedona on the way back.</p>
-        <div class="need"><b>Plan:</b> half day</div>
-      </div>
-    </div>
-
-    <p class="sect-label">In &amp; around Flagstaff</p>
-    <div class="cards">
-      <div class="card star">
-        <h3><a href="https://www.google.com/maps/search/?api=1&amp;query=Lowell+Observatory+Flagstaff" target="_blank" rel="noopener">Lowell Observatory</a> <span class="tag must">Top pick</span></h3>
-        <p>The evening sky program with the heated open-air seating — exactly as your notes flagged. Where Pluto was discovered; telescopes and talks after dark. Dress warm, and book tickets ahead as nights sell out.</p>
-        <div class="need"><b>Plan:</b> evening · warm layers · pre-book</div>
-      </div>
-      <div class="card">
-        <h3><a href="https://www.google.com/maps/search/?api=1&amp;query=Downtown+Flagstaff" target="_blank" rel="noopener">Downtown Flagstaff &amp; Route 66</a></h3>
-        <p>Historic red-brick downtown with cafés, shops and a proper Route 66 stretch — your hotel sits right on it. Good for an easy evening.</p>
-      </div>
-      <div class="card">
-        <h3><a href="https://www.google.com/maps/search/?api=1&amp;query=Walnut+Canyon+National+Monument" target="_blank" rel="noopener">Walnut Canyon</a> <span class="tag easy">Easy</span></h3>
-        <p>Cliff-dwelling ruins on a short canyon-rim loop, ~15 min from town. A gentle half-morning if a day-trip day needs a lighter start.</p>
-        <div class="need"><b>Plan:</b> 2 hrs</div>
-      </div>
-      <div class="card">
-        <h3><a href="https://www.google.com/maps/search/?api=1&amp;query=Arizona+Snowbowl" target="_blank" rel="noopener">Arizona Snowbowl gondola</a></h3>
-        <p>Scenic chairlift up the San Francisco Peaks for long views and crisp mountain air. Weather-dependent in late October — check it's running.</p>
-      </div>
-    </div>
-
-    <p class="sect-label">Space, craters &amp; aircraft</p>
-    <div class="cards">
-      <div class="card star">
-        <h3><a href="https://www.google.com/maps/search/?api=1&amp;query=Meteor+Crater+Arizona" target="_blank" rel="noopener">Meteor Crater</a> <span class="tag must">Top pick</span> <span class="tag kids">Girls</span></h3>
-        <p>The best-preserved impact crater on Earth — a mile across — about 40 min east off I-40. Rim viewpoints, a space museum and an Apollo capsule on site.</p>
-        <div class="need"><b>Site:</b> <a href="https://meteorcrater.com/" target="_blank" rel="noopener">meteorcrater.com</a> · 2–3 hrs</div>
-      </div>
-      <div class="card">
-        <h3><a href="https://www.google.com/maps/search/?api=1&amp;query=US+Naval+Observatory+Flagstaff+Station" target="_blank" rel="noopener">US Naval Observatory — Flagstaff Station</a></h3>
-        <p>The Navy's dark-sky research station west of town. It's a working facility, so public access is limited to occasional open nights — worth checking their schedule for your dates before counting on it.</p>
-        <div class="need"><b>Note:</b> limited access · check ahead</div>
-      </div>
-      <div class="card">
-        <h3><a href="https://www.google.com/maps/search/?api=1&amp;query=Planes+of+Fame+Air+Museum+Valle+Arizona" target="_blank" rel="noopener">Planes of Fame Air Museum, Valle</a></h3>
-        <p>Vintage and military aircraft right on the road up to the Grand Canyon (~45 min). Easy to fold into the canyon day for an aircraft stop.</p>
-        <div class="need"><b>Plan:</b> pair with Grand Canyon</div>
-      </div>
-      <div class="card">
-        <h3><a href="https://www.google.com/maps/search/?api=1&amp;query=Museum+of+Northern+Arizona+Flagstaff" target="_blank" rel="noopener">Museum of Northern Arizona</a></h3>
-        <p>Regional geology, the Colorado Plateau and Native cultures in a lovely stone building in town. A good lighter morning between big day trips.</p>
-        <div class="need"><b>Plan:</b> 2 hrs</div>
-      </div>
-    </div>
-
-    <p class="sect-label">Texas-style BBQ</p>
-    <div class="cards">
-      <div class="card star">
-        <h3><a href="https://www.google.com/maps/search/?api=1&amp;query=Bigfoot+BBQ+Flagstaff" target="_blank" rel="noopener">Bigfoot BBQ</a> <span class="tag eat">Smoked meat</span></h3>
-        <p>Flagstaff's Texas-style smokehouse right on Route 66 — brisket, pulled pork and ribs, plus local beer. Easy walk-to dinner after a big day on the road.</p>
-        <div class="need"><b>Go:</b> dinner</div>
-      </div>
-      <div class="card">
-        <h3><a href="https://www.google.com/maps/search/?api=1&amp;query=Proper+Meats+and+Provisions+Flagstaff" target="_blank" rel="noopener">Proper Meats + Provisions</a> <span class="tag eat">Butcher</span></h3>
-        <p>Downtown butcher and sandwich counter doing house-smoked brisket and pastrami. Grab lunch here to pack for the Grand Canyon or Meteor Crater drive.</p>
-        <div class="need"><b>Go:</b> lunch / takeaway</div>
-      </div>
-    </div>
-
-    <p class="sect-label">Top 10 on Tripadvisor</p>
-    <ol class="top10">
-      <li><a href="https://www.google.com/maps/search/?api=1&amp;query=Lowell+Observatory+Flagstaff" target="_blank" rel="noopener">Lowell Observatory</a></li>
-      <li><a href="https://www.google.com/maps/search/?api=1&amp;query=Walnut+Canyon+National+Monument" target="_blank" rel="noopener">Walnut Canyon National Monument</a></li>
-      <li><a href="https://www.google.com/maps/search/?api=1&amp;query=Historic+Downtown+Flagstaff" target="_blank" rel="noopener">Historic Downtown Flagstaff</a></li>
-      <li><a href="https://www.google.com/maps/search/?api=1&amp;query=Museum+of+Northern+Arizona+Flagstaff" target="_blank" rel="noopener">Museum of Northern Arizona</a></li>
-      <li><a href="https://www.google.com/maps/search/?api=1&amp;query=Riordan+Mansion+State+Historic+Park+Flagstaff" target="_blank" rel="noopener">Riordan Mansion State Historic Park</a></li>
-      <li><a href="https://www.google.com/maps/search/?api=1&amp;query=Arizona+Snowbowl" target="_blank" rel="noopener">Arizona Snowbowl</a></li>
-      <li><a href="https://www.google.com/maps/search/?api=1&amp;query=Sunset+Crater+Volcano+National+Monument" target="_blank" rel="noopener">Sunset Crater Volcano</a></li>
-      <li><a href="https://www.google.com/maps/search/?api=1&amp;query=Wupatki+National+Monument" target="_blank" rel="noopener">Wupatki National Monument</a></li>
-      <li><a href="https://www.google.com/maps/search/?api=1&amp;query=Lava+River+Cave+Flagstaff" target="_blank" rel="noopener">Lava River Cave</a></li>
-      <li><a href="https://www.google.com/maps/search/?api=1&amp;query=The+Arboretum+at+Flagstaff" target="_blank" rel="noopener">The Arboretum at Flagstaff</a></li>
-    </ol>
-    <p class="src">Live ranking — order shifts. <a href="https://www.tripadvisor.com/Attractions-g60971.html" target="_blank" rel="noopener">See it on Tripadvisor ↗</a></p>
+    <p class="mono count" id="count"></p>
+    <div class="list" id="list"></div>
   </section>
 
-  <!-- ============ TUCSON RANCH ============ -->
-  <section class="leg" id="tucson">
-    <div class="leg-head">
-      <span class="leg-num">Leg 03 · Sat 24 – Wed 28 Oct</span>
-      <h2><a href="https://www.google.com/maps/search/?api=1&amp;query=White+Stallion+Ranch+Tucson" target="_blank" rel="noopener">White Stallion Ranch</a></h2>
-      <p class="hotel"><strong>Deluxe room · full board</strong> · all meals, all riding &amp; ranch activities, taxes &amp; gratuity included</p>
-    </div>
-    <div class="stay-strip">
-      <span>4 nights</span><span>All-inclusive</span><span>Arrive = rodeo day</span>
-    </div>
-
-    <p class="sect-label">Included at the ranch — just show up</p>
-    <div class="cards">
-      <div class="card star">
-        <h3>Horse riding <span class="tag must">The main event</span></h3>
-        <p>Rides at every pace across a huge spread of land, matched to how confident each of you is. Note: <b>no riding on Sunday</b> — plan the saddle days around that.</p>
-        <div class="need"><b>Note:</b> no Sunday rides</div>
-      </div>
-      <div class="card">
-        <h3>The weekly rodeo <span class="tag kids">Girls</span></h3>
-        <p>Held once a week — and your Saturday arrival lands right on it. A great, low-effort first evening while you settle in.</p>
-      </div>
-      <div class="card">
-        <h3>Archery &amp; target shooting</h3>
-        <p>Both run on the ranch and are the perfect Sunday fill-in when the horses rest. Good friendly-competition fuel for a family of four.</p>
-      </div>
-      <div class="card">
-        <h3>Fat-tyre e-bikes</h3>
-        <p>Cruise the desert tracks under your own steam. Easy to do on a no-riding day or a spare afternoon.</p>
-      </div>
-      <div class="card">
-        <h3>Pool, hikes &amp; evening entertainment <span class="tag easy">Wind down</span></h3>
-        <p>A lovely pool, walking trails straight off the property, and nightly entertainment. With full board you barely need to leave.</p>
-      </div>
-    </div>
-
-    <p class="sect-label">If you fancy a half-day off the ranch</p>
-    <div class="cards">
-      <div class="card star">
-        <h3><a href="https://www.google.com/maps/search/?api=1&amp;query=Arizona+Sonora+Desert+Museum+Tucson" target="_blank" rel="noopener">Arizona-Sonora Desert Museum</a> <span class="tag must">#1 on Tripadvisor</span> <span class="tag kids">Girls</span></h3>
-        <p>Part zoo, part botanical garden, part natural-history museum — rated Tucson's #1 attraction. About 25 min away, mostly outdoors, and a brilliant family outing.</p>
-        <div class="need"><b>Plan:</b> half day</div>
-      </div>
-      <div class="card">
-        <h3><a href="https://www.google.com/maps/search/?api=1&amp;query=Saguaro+National+Park+West+Tucson" target="_blank" rel="noopener">Saguaro National Park (West)</a></h3>
-        <p>Dense forests of giant saguaro cactus on a scenic loop drive with short walks. Close to the ranch and easy to combine with the Desert Museum.</p>
-      </div>
-      <div class="card star">
-        <h3><a href="https://www.google.com/maps/search/?api=1&amp;query=Pima+Air+and+Space+Museum+Tucson" target="_blank" rel="noopener">Pima Air &amp; Space Museum</a> <span class="tag must">Top pick</span> <span class="tag kids">Girls</span></h3>
-        <p>One of the largest aviation museums in the world — hundreds of aircraft, hangars and outdoor rows. Book the bus tour of the AMARG "Boneyard" next door, where thousands of retired military jets are parked in the desert.</p>
-        <div class="need"><b>Plan:</b> half–full day · Boneyard tour books out</div>
-      </div>
-      <div class="card">
-        <h3><a href="https://www.google.com/maps/search/?api=1&amp;query=gun+range+full+auto+Tucson" target="_blank" rel="noopener">Full-auto range</a> <span class="tag easy">Over the archery</span></h3>
-        <p>Beyond the ranch's own target shooting and archery, a few licensed Tucson ranges run supervised full-auto sessions with an instructor. Book a reputable one ahead and check age and ID rules for the girls.</p>
-        <div class="need"><b>Note:</b> age/ID rules · book ahead</div>
-      </div>
-    </div>
-
-    <p class="sect-label">Texas-style BBQ</p>
-    <div class="cards">
-      <div class="card star">
-        <h3><a href="https://www.google.com/maps/search/?api=1&amp;query=Brother+Johns+Beer+Bourbon+and+BBQ+Tucson" target="_blank" rel="noopener">Brother John's Beer, Bourbon &amp; BBQ</a> <span class="tag eat">Smoked meat</span></h3>
-        <p>Tucson's Texas-style standout — mesquite-smoked brisket and ribs, with a big bourbon list for you and your husband. Worth a night off the ranch's full-board dinners.</p>
-        <div class="need"><b>Go:</b> dinner · ranch is full board</div>
-      </div>
-      <div class="card">
-        <h3><a href="https://www.google.com/maps/search/?api=1&amp;query=BrushFire+BBQ+Co+Tucson" target="_blank" rel="noopener">BrushFire BBQ Co.</a> <span class="tag eat">Smoked meat</span></h3>
-        <p>Casual, family-friendly smokehouse doing brisket, pulled pork and ribs — an easier lunch stop if you're already out at the Desert Museum or Pima.</p>
-        <div class="need"><b>Go:</b> lunch</div>
-      </div>
-    </div>
-
-    <p class="sect-label">Top 10 on Tripadvisor</p>
-    <ol class="top10">
-      <li><a href="https://www.google.com/maps/search/?api=1&amp;query=Arizona+Sonora+Desert+Museum+Tucson" target="_blank" rel="noopener">Arizona-Sonora Desert Museum</a></li>
-      <li><a href="https://www.google.com/maps/search/?api=1&amp;query=Saguaro+National+Park+Tucson" target="_blank" rel="noopener">Saguaro National Park</a></li>
-      <li><a href="https://www.google.com/maps/search/?api=1&amp;query=Mount+Lemmon+Scenic+Byway+Tucson" target="_blank" rel="noopener">Mt. Lemmon Scenic Byway</a></li>
-      <li><a href="https://www.google.com/maps/search/?api=1&amp;query=Pima+Air+and+Space+Museum+Tucson" target="_blank" rel="noopener">Pima Air &amp; Space Museum</a></li>
-      <li><a href="https://www.google.com/maps/search/?api=1&amp;query=Sabino+Canyon+Tucson" target="_blank" rel="noopener">Sabino Canyon</a></li>
-      <li><a href="https://www.google.com/maps/search/?api=1&amp;query=Mission+San+Xavier+del+Bac+Tucson" target="_blank" rel="noopener">Mission San Xavier del Bac</a></li>
-      <li><a href="https://www.google.com/maps/search/?api=1&amp;query=Tucson+Botanical+Gardens" target="_blank" rel="noopener">Tucson Botanical Gardens</a></li>
-      <li><a href="https://www.google.com/maps/search/?api=1&amp;query=Reid+Park+Zoo+Tucson" target="_blank" rel="noopener">Reid Park Zoo</a></li>
-      <li><a href="https://www.google.com/maps/search/?api=1&amp;query=Old+Tucson" target="_blank" rel="noopener">Old Tucson</a></li>
-      <li><a href="https://www.google.com/maps/search/?api=1&amp;query=Colossal+Cave+Mountain+Park+Tucson" target="_blank" rel="noopener">Colossal Cave Mountain Park</a></li>
-    </ol>
-    <p class="src">Live ranking — order shifts. <a href="https://www.tripadvisor.com/Attractions-g60950.html" target="_blank" rel="noopener">See it on Tripadvisor ↗</a></p>
+  <!-- ================= EATS ================= -->
+  <section class="view" id="eats" aria-label="Eats" hidden>
+    <h2 class="sec-title">Texas BBQ &amp; good eats</h2>
+    <p class="sec-sub">Smoked brisket at every stop. The ranch is full board, so its picks are for a night out.</p>
+    <div class="list" id="eat-list"></div>
   </section>
 
-  <!-- ============ NOTES ============ -->
-  <section class="notes" id="notes">
-    <h2>Good to know</h2>
-    <ul>
-      <li><span class="k">Resort fee</span><span>Hilton Scottsdale charges ~$34.21 per room, per night, paid locally — budget roughly $137 for the four nights.</span></li>
-      <li><span class="k">Sunday</span><span>No horse riding at White Stallion Ranch on Sundays. Keep that day for archery, shooting, e-bikes, the pool or a desert-museum trip.</span></li>
-      <li><span class="k">Pack layers</span><span>Scottsdale &amp; Tucson are warm, but Flagstaff and the Grand Canyon rim sit around 2,100 m — cold mornings and evenings. Bring proper warm layers for the Lowell Observatory night.</span></li>
-      <li><span class="k">Driving</span><span>Scottsdale → Flagstaff ≈ 2.5 hrs (go via Sedona or stop at <a href="https://www.google.com/maps/search/?api=1&amp;query=Montezuma+Castle+National+Monument" target="_blank" rel="noopener">Montezuma Castle</a>). Flagstaff → Tucson ≈ 4 hrs through Phoenix.</span></li>
-      <li><span class="k">Clocks</span><span>Arizona doesn't do daylight saving, so it won't shift while you're there.</span></li>
-      <li><span class="k">Book ahead</span><span>Balloon rides, Taliesin West, Pink Jeep tours and the Grand Canyon Railway all sell out — reserve before you fly.</span></li>
-    </ul>
+  <!-- ================= INFO ================= -->
+  <section class="view" id="info" aria-label="Info" hidden>
+    <h2 class="sec-title">Where we're sleeping</h2>
+    <div class="list" id="hotels"></div>
+
+    <h2 class="sec-title">Need to know</h2>
+    <div class="card-plain">
+      <ul class="know">
+        <li><svg aria-hidden="true"><use href="#i-hoodie"/></svg><span><b>Pack a hoodie.</b> Flagstaff and the Grand Canyon are 2,100 m up, so nights are freezing even when Scottsdale is 30°C.</span></li>
+        <li><svg aria-hidden="true"><use href="#i-horseshoe"/></svg><span><b>No riding on Sunday 25.</b> The ranch still has archery, shooting, e-bikes and the pool.</span></li>
+        <li><svg aria-hidden="true"><use href="#i-drop"/></svg><span><b>Drink loads of water.</b> Desert air dries you out fast, especially on hikes.</span></li>
+        <li><svg aria-hidden="true"><use href="#i-car"/></svg><span><b>Drives:</b> Scottsdale → Flagstaff about 2.5 hrs. Flagstaff → Tucson about 4 hrs.</span></li>
+        <li><svg aria-hidden="true"><use href="#i-ticket"/></svg><span><b>Book ahead:</b> Lowell Observatory nights, the Boneyard tour, Pink Jeep tours and Taliesin West all sell out.</span></li>
+        <li><svg aria-hidden="true"><use href="#i-target"/></svg><span><b>Shooting ranges</b> have age and ID rules for under-18s. Call before you go.</span></li>
+        <li><svg aria-hidden="true"><use href="#i-clock"/></svg><span><b>Arizona doesn't change its clocks.</b> No daylight saving here.</span></li>
+        <li><svg aria-hidden="true"><use href="#i-phone"/></svg><span><b>Make it an app:</b> on iPhone tap Share → Add to Home Screen. On Android tap ⋮ → Add to Home screen.</span></li>
+      </ul>
+    </div>
+
+    <h2 class="sec-title">Tripadvisor top 10s</h2>
+    <div class="list" id="top10s"></div>
+
+    <div class="foot">
+      <svg viewBox="0 0 200 212" aria-hidden="true"><use href="#dog"/></svg>
+      <p class="mono">Made for the Davies crew · Happy trails</p>
+    </div>
   </section>
 </main>
 
-<footer class="wrap">Happy trails, the Davies family · Oct 2026 🤠🐾</footer>
+<nav class="tabs" aria-label="Sections">
+  <div class="in">
+    <button class="tab" type="button" data-tab="today"><svg aria-hidden="true"><use href="#i-sun"/></svg>Today</button>
+    <button class="tab" type="button" data-tab="explore"><svg aria-hidden="true"><use href="#i-compass"/></svg>Explore</button>
+    <button class="tab" type="button" data-tab="eats"><svg aria-hidden="true"><use href="#i-bbq"/></svg>Eats</button>
+    <button class="tab" type="button" data-tab="info"><svg aria-hidden="true"><use href="#i-info"/></svg>Info</button>
+  </div>
+</nav>
 
 <script>
-  // Smooth scroll + active-chip scrollspy. No libraries needed.
-  const links = [...document.querySelectorAll('nav.chips a')];
-  const map = new Map(links.map(a => [a.getAttribute('href').slice(1), a]));
-  links.forEach(a => a.addEventListener('click', e => {
-    const t = document.getElementById(a.getAttribute('href').slice(1));
-    if (t) { e.preventDefault(); t.scrollIntoView({behavior: 'smooth', block: 'start'}); }
-  }));
-  const spy = new IntersectionObserver(es => {
-    es.forEach(en => {
-      if (en.isIntersecting) {
-        links.forEach(l => l.classList.remove('active'));
-        map.get(en.target.id)?.classList.add('active');
-      }
-    });
-  }, { rootMargin: '-45% 0px -50% 0px' });
-  document.querySelectorAll('section[id]').forEach(s => spy.observe(s));
+(() => {
+  const MAP = q => 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q);
+  const ic = (id, cls = '') => `<svg class="${cls}" aria-hidden="true"><use href="#i-${id}"/></svg>`;
+  const $ = s => document.querySelector(s);
 
-  // Give every activity card an icon, matched by keyword in its title.
-  const ICONS = [
-    [/bbq|meats|smoke/i, 'i-bbq'],
-    [/aquarium|butterfly/i, 'i-fish'],
-    [/botanical|saguaro|desert museum/i, 'i-cactus'],
-    [/instrument|music/i, 'i-music'],
-    [/pool/i, 'i-water'],
-    [/balloon/i, 'i-balloon'],
-    [/jeep|horseback/i, 'i-compass'],
-    [/\bair|aircraft|planes|pima|boneyard/i, 'i-plane'],
-    [/gun|range|archery|shooting|rifle/i, 'i-target'],
-    [/observatory|naval|lowell/i, 'i-telescope'],
-    [/crater/i, 'i-crater'],
-    [/bearizona|williams/i, 'i-paw'],
-    [/rodeo|horse/i, 'i-horseshoe'],
-    [/\bbike/i, 'i-bike'],
-    [/canyon|sedona|snowbowl|pinnacle|peak|grand/i, 'i-mountains'],
-    [/old town|downtown/i, 'i-shop'],
-    [/taliesin|jerome|museum|heard|western spirit|mansion/i, 'i-museum'],
+  const STOPS = {
+    sco: { name: 'Scottsdale', short: 'Scottsdale', dates: 'Oct 17–21', c: 'var(--orange)', on: 'var(--ink)',
+           hotel: 'Hilton Scottsdale Resort & Villas', hq: 'Hilton Scottsdale Resort and Villas',
+           info: 'Sat 17 → Wed 21 · 4 nights · 2 queen beds, pool view · room only',
+           extra: 'Resort fee about $34.21 a night, paid at the hotel (~$137 total).' },
+    fla: { name: 'Flagstaff', short: 'Flagstaff', dates: 'Oct 21–24', c: 'var(--cobalt)', on: '#fff',
+           hotel: 'Americana Motor Hotel', hq: 'Americana Motor Hotel Flagstaff',
+           info: 'Wed 21 → Sat 24 · 3 nights · large room, 2 queen beds · room only',
+           extra: 'Right on Route 66, a short drive from downtown.' },
+    tuc: { name: 'White Stallion Ranch', short: 'Ranch', dates: 'Oct 24–28', c: 'var(--pink)', on: 'var(--ink)',
+           hotel: 'White Stallion Ranch', hq: 'White Stallion Ranch Tucson',
+           info: 'Sat 24 → Wed 28 · 4 nights · deluxe room · full board',
+           extra: 'All meals, riding, ranch activities, taxes and tips included.' },
+  };
+
+  const VIBES = {
+    thrills:  { label: 'Thrills',   c: 'var(--pink)',   on: 'var(--ink)', icon: 'target' },
+    animals:  { label: 'Animals',   c: 'var(--lime)',   on: 'var(--ink)', icon: 'paw' },
+    space:    { label: 'Space',     c: 'var(--cobalt)', on: '#fff',       icon: 'telescope' },
+    planes:   { label: 'Planes',    c: 'var(--sky)',    on: 'var(--ink)', icon: 'plane' },
+    outdoors: { label: 'Outdoors',  c: 'var(--sun)',    on: 'var(--ink)', icon: 'mountains' },
+    culture:  { label: 'Culture',   c: 'var(--mint)',   on: 'var(--ink)', icon: 'museum' },
+    shop:     { label: 'Shopping',  c: 'var(--orange)', on: 'var(--ink)', icon: 'bag' },
+    chill:    { label: 'Chill',     c: 'var(--sky)',    on: 'var(--ink)', icon: 'water' },
+    food:     { label: 'Food',      c: 'var(--orange)', on: 'var(--ink)', icon: 'bbq' },
+  };
+
+  // s = stop, n = name, q = maps search (or url), b = blurb, v = vibes, i = icon,
+  // t = time, d = drive, booked / inc / when, photo, who ('teen' | 'parent'), note
+  const ACTS = [
+    // ---------- Scottsdale ----------
+    { id: 'balloon', s: 'sco', n: 'Hot-air balloon at sunrise', q: 'hot air balloon rides Scottsdale', i: 'balloon', v: ['thrills', 'outdoors'],
+      b: "Floating over the Sonoran Desert as the sun comes up. Pickup is early and it's cold before dawn, so wear layers you can peel off.",
+      booked: 'Mon 19 · sunrise', photo: true },
+    { id: 'illusions', s: 'sco', n: 'Museum of Illusions', q: 'Museum of Illusions Scottsdale', i: 'eye', v: ['culture'],
+      b: 'Rooms built to mess with your eyes: anti-gravity, shrinking people, infinity mirrors. Made for photos.',
+      t: '1 hr', d: '10 min', who: 'teen', photo: true },
+    { id: 'odysea', s: 'sco', n: 'OdySea Aquarium + Butterfly Wonderland', q: 'OdySea Aquarium Scottsdale', i: 'fish', v: ['animals'],
+      b: 'Sit in a rotating tunnel while sharks glide overhead, then walk into a room of butterflies next door.',
+      t: 'Half day', d: '15 min', photo: true },
+    { id: 'swcc', s: 'sco', n: 'Southwest Wildlife Conservation Center', q: 'Southwest Wildlife Conservation Center Scottsdale', i: 'paw', v: ['animals'],
+      b: 'Rescued bears, wolves, mountain lions and coyotes up close on a guided walk. Small and real.',
+      t: '1.5 hrs', d: '30 min', note: 'Guided tours · book ahead' },
+    { id: 'fashion', s: 'sco', n: 'Scottsdale Fashion Square', q: 'Scottsdale Fashion Square', i: 'bag', v: ['shop'],
+      b: 'The biggest mall in the Southwest, fully air-conditioned. Good plan B for a scorching afternoon.',
+      d: '10 min', who: 'teen' },
+    { id: 'oldtown', s: 'sco', n: 'Old Town Scottsdale', q: 'Old Town Scottsdale', i: 'shop', v: ['shop', 'culture'],
+      b: 'Cowboy boots, ice cream, galleries and murals. An easy evening wander with dinner.',
+      d: '10 min', photo: true },
+    { id: 'lazyriver', s: 'sco', n: 'Resort lazy river', q: 'Hilton Scottsdale Resort and Villas', i: 'water', v: ['chill'],
+      b: 'The Hilton has a lazy river and a waterslide. Plan one do-nothing afternoon, especially after balloon morning.',
+      who: 'teen' },
+    { id: 'jeep', s: 'sco', n: 'Desert jeep tour', q: 'Sonoran Desert jeep tours Scottsdale', i: 'compass', v: ['thrills', 'outdoors'],
+      b: 'Off-roading through saguaro country in an open jeep, with guides who know every trail. Very bumpy.',
+      t: '2–3 hrs', who: 'teen', note: 'Pre-book' },
+    { id: 'mim', s: 'sco', n: 'Musical Instrument Museum', q: 'Musical Instrument Museum Phoenix', i: 'music', v: ['culture'],
+      b: 'Your headphones start playing as you walk up to each exhibit, and there is a room full of instruments you can play.',
+      t: 'Half day', d: '25 min' },
+    { id: 'botanical', s: 'sco', n: 'Desert Botanical Garden', q: 'Desert Botanical Garden Phoenix', i: 'cactus', v: ['outdoors'],
+      b: 'Giant saguaros and strange cactus shapes on flat loop trails. Go at golden hour for photos.',
+      t: '2 hrs', d: '20 min', who: 'parent', photo: true },
+    { id: 'pinnacle', s: 'sco', n: 'Pinnacle Peak hike', q: 'Pinnacle Peak Park Scottsdale', i: 'mountains', v: ['outdoors'],
+      b: 'A proper desert trail with big views and no scrambling. Start early before the heat.',
+      t: '2 hrs', d: '25 min', who: 'parent' },
+    { id: 'taliesin', s: 'sco', n: 'Taliesin West', q: 'Taliesin West Scottsdale', i: 'museum', v: ['culture'],
+      b: "Frank Lloyd Wright's desert home and studio, by guided tour only.",
+      t: '90 min', d: '20 min', who: 'parent', note: 'Book ahead' },
+    { id: 'heard', s: 'sco', n: 'Heard Museum', q: 'Heard Museum Phoenix', i: 'museum', v: ['culture'],
+      b: 'Native American art and culture, set around shady courtyards. One of the best museums of its kind in the US.',
+      t: '2 hrs', d: '25 min', who: 'parent' },
+    { id: 'caf', s: 'sco', n: 'CAF Airbase Arizona', q: 'Commemorative Air Force Airbase Arizona Mesa', i: 'plane', v: ['planes'],
+      b: 'A hangar of WWII bombers and fighters that still fly. You can walk right up to them.',
+      t: '2 hrs', d: '40 min', who: 'parent' },
+    { id: 'gunclub', s: 'sco', n: 'Full-auto at Scottsdale Gun Club', q: 'Scottsdale Gun Club', i: 'target', v: ['thrills'],
+      b: 'Fire a machine gun on an indoor range with an instructor beside you. Loud and supervised.',
+      d: '15 min', note: 'Age & ID rules · call ahead' },
+    { id: 'littlemiss', s: 'sco', n: 'Little Miss BBQ', url: 'https://littlemissbbq.com/', i: 'bbq', v: ['food'],
+      b: 'Central-Texas brisket that people queue for before the doors open. It sells out, so arrive early.',
+      t: 'Lunch only', d: '25 min' },
+
+    // ---------- Flagstaff ----------
+    { id: 'canyon', s: 'fla', n: 'Grand Canyon, South Rim', q: 'Grand Canyon South Rim Mather Point', i: 'mountains', v: ['outdoors'],
+      b: 'Start at Mather Point, walk part of the Rim Trail, then drive to the Desert View watchtower. It gets cold and windy up there.',
+      t: 'Full day', d: '1.5 hrs', booked: '', photo: true },
+    { id: 'sedona', s: 'fla', n: 'Sedona red rocks', q: 'Sedona Arizona', i: 'mountains', v: ['outdoors', 'thrills'],
+      b: 'Red rock towers all around. Walk the Bell Rock loop, see the Chapel of the Holy Cross, and take a Pink Jeep tour for a wilder ride.',
+      t: 'Full day', d: '45 min', photo: true },
+    { id: 'meteor', s: 'fla', n: 'Meteor Crater', url: 'https://meteorcrater.com/', i: 'crater', v: ['space'],
+      b: 'A hole nearly a mile wide, made in seconds about 50,000 years ago. Rim walk, space museum, Apollo capsule.',
+      t: '2–3 hrs', d: '40 min', photo: true },
+    { id: 'lowell', s: 'fla', n: 'Lowell Observatory', q: 'Lowell Observatory Flagstaff', i: 'telescope', v: ['space'],
+      b: 'Pluto was discovered here. Night sky sessions have heated outdoor seats and big telescopes. Bring a hoodie.',
+      t: 'Evening', d: '5 min', note: 'Book tickets · nights sell out' },
+    { id: 'lavacave', s: 'fla', n: 'Lava River Cave', q: 'Lava River Cave Flagstaff', i: 'torch', v: ['thrills', 'outdoors'],
+      b: 'A mile-long lava tube in complete darkness. You climb over rocks by torchlight. The most adventurous thing on this list.',
+      t: '2 hrs', d: '30 min', who: 'teen', note: '2 torches each · check the road is open' },
+    { id: 'bearizona', s: 'fla', n: 'Bearizona', q: 'Bearizona Williams Arizona', i: 'paw', v: ['animals'],
+      b: 'A drive-through wildlife park where bears, wolves and bison come right up to the car, plus a walk-through area with baby animals.',
+      t: 'Half day', d: '35 min', photo: true },
+    { id: 'jerome', s: 'fla', n: 'Jerome ghost town', q: 'Jerome Arizona', i: 'ghost', v: ['culture'],
+      b: 'An old mining town on the side of a mountain, said to be haunted. Odd little shops, ghost tours and long views.',
+      t: 'Half day', d: '1 hr', who: 'teen', photo: true },
+    { id: 'route66', s: 'fla', n: 'Downtown Flagstaff & Route 66', q: 'Downtown Flagstaff', i: 'shop', v: ['shop', 'culture'],
+      b: 'Your motel is on Route 66. Downtown has red-brick streets, cafés, vintage shops and neon after dark.',
+      d: '5 min', photo: true },
+    { id: 'snowbowl', s: 'fla', n: 'Arizona Snowbowl gondola', q: 'Arizona Snowbowl', i: 'mountains', v: ['outdoors'],
+      b: 'A scenic lift up the San Francisco Peaks with huge views. It depends on the weather this late in the year.',
+      d: '25 min', photo: true, note: "Check it's running" },
+    { id: 'walnut', s: 'fla', n: 'Walnut Canyon', q: 'Walnut Canyon National Monument', i: 'mountains', v: ['outdoors', 'culture'],
+      b: 'Cliff houses built into the canyon walls 800 years ago, on a short loop trail.',
+      t: '2 hrs', d: '15 min', who: 'parent' },
+    { id: 'usno', s: 'fla', n: 'US Naval Observatory', q: 'US Naval Observatory Flagstaff Station', i: 'telescope', v: ['space'],
+      b: "The Navy's dark-sky research station. The public can only visit on occasional open nights.",
+      d: '15 min', who: 'parent', note: 'Limited access · check first' },
+    { id: 'planesfame', s: 'fla', n: 'Planes of Fame Air Museum', q: 'Planes of Fame Air Museum Valle Arizona', i: 'plane', v: ['planes'],
+      b: 'Vintage and military aircraft right on the road to the Grand Canyon. An easy stop on canyon day.',
+      t: '1 hr', d: '50 min', who: 'parent' },
+    { id: 'mna', s: 'fla', n: 'Museum of Northern Arizona', q: 'Museum of Northern Arizona Flagstaff', i: 'museum', v: ['culture'],
+      b: 'Dinosaurs, geology and the Native cultures of the Colorado Plateau.',
+      t: '2 hrs', d: '10 min', who: 'parent' },
+    { id: 'bigfoot', s: 'fla', n: 'Bigfoot BBQ', q: 'Bigfoot BBQ Flagstaff', i: 'bbq', v: ['food'],
+      b: 'Texas-style brisket and ribs on Route 66. An easy dinner after a long day out.',
+      t: 'Dinner', d: '5 min' },
+    { id: 'proper', s: 'fla', n: 'Proper Meats + Provisions', q: 'Proper Meats and Provisions Flagstaff', i: 'bbq', v: ['food'],
+      b: 'A butcher counter that smokes its own brisket. Grab sandwiches to take on canyon day.',
+      t: 'Lunch to go', d: '5 min' },
+
+    // ---------- Ranch ----------
+    { id: 'riding', s: 'tuc', n: 'Horse riding', q: 'White Stallion Ranch Tucson', i: 'horseshoe', v: ['thrills', 'outdoors'],
+      b: "Rides at every speed across a huge desert ranch, matched to how confident you are. It's included, so just turn up.",
+      inc: true, note: 'No riding on Sundays', photo: true },
+    { id: 'rodeo', s: 'tuc', n: 'The weekly rodeo', q: 'White Stallion Ranch Tucson', i: 'hat', v: ['thrills'],
+      b: 'A ranch rodeo with cowboys, calves and plenty of dust. Ask at check-in which night it runs.',
+      inc: true, photo: true },
+    { id: 'archery', s: 'tuc', n: 'Archery & target shooting', q: 'White Stallion Ranch Tucson', i: 'target', v: ['thrills'],
+      b: 'Both are on the ranch, which makes them ideal for Sunday when the horses rest. Keep a family leaderboard.',
+      inc: true },
+    { id: 'ebikes', s: 'tuc', n: 'Fat-tyre e-bikes', q: 'White Stallion Ranch Tucson', i: 'bike', v: ['thrills', 'outdoors'],
+      b: 'Ride the desert trails with a motor doing most of the work.',
+      inc: true, who: 'teen' },
+    { id: 'ranchpool', s: 'tuc', n: 'Pool & evening entertainment', q: 'White Stallion Ranch Tucson', i: 'water', v: ['chill'],
+      b: "Pool afternoons and something on every night. With full board you barely need to leave.",
+      inc: true, who: 'teen' },
+    { id: 'desertmuseum', s: 'tuc', n: 'Arizona-Sonora Desert Museum', q: 'Arizona Sonora Desert Museum Tucson', i: 'cactus', v: ['animals', 'outdoors'],
+      b: "Tucson's #1 on Tripadvisor. Part zoo, part garden: mountain lions, hummingbirds and, in season, a free-flying bird show.",
+      t: 'Half day', d: '25 min' },
+    { id: 'pima', s: 'tuc', n: 'Pima Air & Space + Boneyard', q: 'Pima Air and Space Museum Tucson', i: 'plane', v: ['planes'],
+      b: 'One of the biggest aircraft museums in the world. Book the Boneyard bus tour to see thousands of retired military jets parked in the desert.',
+      t: 'Half–full day', d: '35 min', photo: true, note: 'Boneyard tour books out · bring ID' },
+    { id: 'saguaro', s: 'tuc', n: 'Saguaro National Park', q: 'Saguaro National Park West Tucson', i: 'cactus', v: ['outdoors'],
+      b: 'Whole forests of giant saguaro cactus along a scenic loop drive. Best at sunset.',
+      t: '2 hrs', d: '20 min', photo: true },
+    { id: 'tucsonrange', s: 'tuc', n: 'Full-auto range, Tucson', q: 'full auto gun range Tucson', i: 'target', v: ['thrills'],
+      b: 'Licensed ranges run supervised machine-gun sessions with an instructor.',
+      note: 'Age & ID rules · book ahead' },
+    { id: 'brotherjohns', s: 'tuc', n: "Brother John's Beer, Bourbon & BBQ", q: 'Brother Johns Beer Bourbon and BBQ Tucson', i: 'bbq', v: ['food'],
+      b: 'Mesquite-smoked brisket and ribs. Worth a night off the ranch dinners.',
+      t: 'Dinner', d: '30 min' },
+    { id: 'brushfire', s: 'tuc', n: 'BrushFire BBQ Co.', q: 'BrushFire BBQ Co Tucson', i: 'bbq', v: ['food'],
+      b: 'A casual smokehouse. Easy lunch if you are out at the Desert Museum or Pima.',
+      t: 'Lunch', d: '25 min' },
   ];
-  const NS = 'http://www.w3.org/2000/svg';
-  document.querySelectorAll('.card h3').forEach(h => {
-    const t = h.textContent;
-    const hit = ICONS.find(([re]) => re.test(t));
-    const svg = document.createElementNS(NS, 'svg');
-    svg.setAttribute('class', 'ico');
-    svg.setAttribute('viewBox', '0 0 24 24');
-    svg.setAttribute('aria-hidden', 'true');
-    const use = document.createElementNS(NS, 'use');
-    use.setAttribute('href', '#' + (hit ? hit[1] : 'i-star'));
-    svg.appendChild(use);
-    h.insertBefore(svg, h.firstChild);
+
+  // b = booked, i = idea, h = heads-up
+  const DAYS = [
+    { s: 'sco', t: 'Touchdown, Scottsdale', p: [['h', 'Check in at the Hilton'], ['i', 'Lazy river, then dinner in Old Town']] },
+    { s: 'sco', t: 'Desert Sunday', p: [['i', 'Museum of Illusions or OdySea Aquarium'], ['i', 'Fashion Square if it gets too hot'], ['h', 'Early night: balloon pickup is before sunrise']] },
+    { s: 'sco', t: 'Balloon day', p: [['b', 'Hot-air balloon at sunrise'], ['i', 'Pool nap, then the Southwest Wildlife Center']] },
+    { s: 'sco', t: 'Last Scottsdale day', p: [['i', 'Little Miss BBQ lunch: queue before it opens'], ['h', 'Pack hoodies tonight. Flagstaff is cold']] },
+    { s: 'fla', from: 'sco', t: 'Road trip north', p: [['h', 'Drive about 2.5 hrs to Flagstaff'], ['i', 'Stop in Sedona for red rock photos'], ['i', 'Bigfoot BBQ on Route 66 for dinner']] },
+    { s: 'fla', t: 'Canyon country', p: [['b', 'Grand Canyon (move it to your booked day)'], ['i', 'Planes of Fame on the drive back']] },
+    { s: 'fla', t: 'Space day', p: [['i', 'Meteor Crater in the morning'], ['i', 'Lava River Cave if you are brave'], ['i', 'Lowell Observatory after dark, hoodies on']] },
+    { s: 'tuc', from: 'fla', t: 'Hello, ranch', p: [['h', 'Drive about 4 hrs to Tucson'], ['b', 'Check in at White Stallion Ranch'], ['i', 'Ask which night the weekly rodeo is']] },
+    { s: 'tuc', t: 'No-horse Sunday', p: [['h', 'No riding today, the horses get a day off'], ['i', 'Archery, target shooting, e-bikes, pool']] },
+    { s: 'tuc', t: 'Saddle up', p: [['i', 'Morning ride, pool afternoon'], ['i', "Brother John's BBQ for a night out"]] },
+    { s: 'tuc', t: 'Last ranch day', p: [['i', 'Pima Air & Space + Boneyard, or one last ride'], ['i', 'Sunset at Saguaro National Park']] },
+    { s: 'home', from: 'tuc', t: 'Heading home', p: [['h', 'Check out and travel day'], ['i', 'Vote: best day, worst snack, funniest moment']] },
+  ];
+
+  const TOP10 = {
+    sco: { url: 'https://www.tripadvisor.com/Attractions-g31350.html', list: [
+      ['Taliesin West', 'Taliesin West Scottsdale'], ['Old Town Scottsdale', 'Old Town Scottsdale'], ['OdySea Aquarium', 'OdySea Aquarium Scottsdale'],
+      ['Butterfly Wonderland', 'Butterfly Wonderland Scottsdale'], ['Southwest Wildlife Conservation Center', 'Southwest Wildlife Conservation Center Scottsdale'],
+      ['Western Spirit: Museum of the West', 'Western Spirit Scottsdale Museum of the West'], ['Desert Botanical Garden', 'Desert Botanical Garden Phoenix'],
+      ['McCormick-Stillman Railroad Park', 'McCormick Stillman Railroad Park Scottsdale'], ['Scottsdale Museum of Contemporary Art', 'Scottsdale Museum of Contemporary Art'],
+      ['Museum of Illusions', 'Museum of Illusions Scottsdale']] },
+    fla: { url: 'https://www.tripadvisor.com/Attractions-g60971.html', list: [
+      ['Lowell Observatory', 'Lowell Observatory Flagstaff'], ['Walnut Canyon National Monument', 'Walnut Canyon National Monument'], ['Historic Downtown Flagstaff', 'Historic Downtown Flagstaff'],
+      ['Museum of Northern Arizona', 'Museum of Northern Arizona Flagstaff'], ['Riordan Mansion State Historic Park', 'Riordan Mansion State Historic Park Flagstaff'],
+      ['Arizona Snowbowl', 'Arizona Snowbowl'], ['Sunset Crater Volcano', 'Sunset Crater Volcano National Monument'], ['Wupatki National Monument', 'Wupatki National Monument'],
+      ['Lava River Cave', 'Lava River Cave Flagstaff'], ['The Arboretum at Flagstaff', 'The Arboretum at Flagstaff']] },
+    tuc: { url: 'https://www.tripadvisor.com/Attractions-g60950.html', list: [
+      ['Arizona-Sonora Desert Museum', 'Arizona Sonora Desert Museum Tucson'], ['Saguaro National Park', 'Saguaro National Park Tucson'], ['Mt. Lemmon Scenic Byway', 'Mount Lemmon Scenic Byway Tucson'],
+      ['Pima Air & Space Museum', 'Pima Air and Space Museum Tucson'], ['Sabino Canyon', 'Sabino Canyon Tucson'], ['Mission San Xavier del Bac', 'Mission San Xavier del Bac Tucson'],
+      ['Tucson Botanical Gardens', 'Tucson Botanical Gardens'], ['Reid Park Zoo', 'Reid Park Zoo Tucson'], ['Old Tucson', 'Old Tucson'], ['Colossal Cave Mountain Park', 'Colossal Cave Mountain Park Tucson']] },
+  };
+
+  const TIPS = [
+    'Howdy, partner!',
+    'Tap the heart on anything you want to do.',
+    'Hoodies for Flagstaff. Trust me.',
+    'Lava cave = two torches each.',
+    'No horses on Sunday. They need a nap too.',
+    'Drink water. Then drink more water.',
+    'Balloon day means an early alarm.',
+    'Ticked something off? Hit Done for the stamp.',
+  ];
+
+  // ---------- storage (per phone) ----------
+  const load = k => { try { return new Set(JSON.parse(localStorage.getItem(k)) || []); } catch (e) { return new Set(); } };
+  const save = (k, set) => { try { localStorage.setItem(k, JSON.stringify([...set])); } catch (e) {} };
+  const saved = load('hd:saved');
+  const done = load('hd:done');
+
+  // ---------- dates ----------
+  const START = new Date(2026, 9, 17);
+  const t0 = new Date(); t0.setHours(0, 0, 0, 0);
+  const dayIdx = Math.round((t0 - START) / 864e5);
+  const WD = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const dateOf = i => { const d = new Date(2026, 9, 17 + i); return { wd: WD[d.getDay()], n: d.getDate() }; };
+  const stopFor = i => (i < 4 ? 'sco' : i < 7 ? 'fla' : 'tuc');
+  let sel = Math.min(11, Math.max(0, dayIdx));
+
+  const state = { stop: dayIdx > 11 ? 'all' : stopFor(Math.max(0, dayIdx)), vibe: 'all' };
+
+  // ---------- cards ----------
+  const href = a => a.url || MAP(a.q);
+  function card(a, showStop) {
+    const v = VIBES[a.v[0]];
+    const meta = [showStop ? STOPS[a.s].short : '', a.t, a.d && a.d + ' away'].filter(Boolean).join(' · ');
+    const tags = [];
+    if (a.booked !== undefined) tags.push(`<span class="tag booked">Booked${a.booked ? ' · ' + a.booked : ''}</span>`);
+    if (a.inc) tags.push(`<span class="tag inc">Included</span>`);
+    if (a.who === 'teen') tags.push(`<span class="tag teen">Teen pick</span>`);
+    if (a.who === 'parent') tags.push(`<span class="tag">Parent pick</span>`);
+    if (a.photo) tags.push(`<span class="tag photo">Photo spot</span>`);
+    if (a.note) tags.push(`<span class="tag note">${a.note}</span>`);
+    const isSaved = saved.has(a.id), isDone = done.has(a.id);
+    return `<article class="act${isDone ? ' is-done' : ''}" style="--c:${v.c};--on:${v.on}">
+      <div class="act-head">
+        <span class="badge">${ic(a.i)}</span>
+        <div class="act-title">
+          <h3><a href="${href(a)}" target="_blank" rel="noopener">${a.n}</a></h3>
+          ${meta ? `<p class="mono act-meta">${meta}</p>` : ''}
+        </div>
+        <button class="heart" type="button" data-heart="${a.id}" aria-pressed="${isSaved}" aria-label="Save ${a.n}">${ic('heart')}</button>
+      </div>
+      <p class="act-blurb">${a.b}</p>
+      <div class="act-foot">
+        <div class="tags">${tags.join('')}</div>
+        <button class="done-btn" type="button" data-done="${a.id}" aria-pressed="${isDone}">${ic('check')}${isDone ? 'Done' : 'Done?'}</button>
+      </div>
+    </article>`;
+  }
+
+  // ---------- Explore ----------
+  const SEG = [['sco', 'Scottsdale'], ['fla', 'Flagstaff'], ['tuc', 'Ranch'], ['all', 'All']];
+  const CHIPS = [
+    ['all', 'Everything', 'star', 'var(--ink)', '#fff'],
+    ['saved', 'Saved', 'heart', 'var(--pink)', 'var(--ink)'],
+    ['booked', 'Booked', 'ticket', 'var(--sun)', 'var(--ink)'],
+    ['teen', 'Teen picks', 'eye', 'var(--cobalt)', '#fff'],
+    ['photo', 'Photo spots', 'sun', 'var(--pink-soft)', 'var(--ink)'],
+    ...['thrills', 'animals', 'space', 'planes', 'outdoors', 'culture', 'shop', 'chill'].map(k => [k, VIBES[k].label, VIBES[k].icon, VIBES[k].c, VIBES[k].on]),
+  ];
+
+  function matches(a) {
+    const anyStop = state.vibe === 'saved' || state.vibe === 'booked';
+    if (a.v.includes('food') && !anyStop) return false;
+    if (state.stop !== 'all' && a.s !== state.stop) return false;
+    switch (state.vibe) {
+      case 'all': return true;
+      case 'saved': return saved.has(a.id);
+      case 'booked': return a.booked !== undefined || !!a.inc;
+      case 'teen': return a.who === 'teen';
+      case 'photo': return !!a.photo;
+      default: return a.v.includes(state.vibe);
+    }
+  }
+
+  function renderExplore() {
+    $('#seg').innerHTML = SEG.map(([k, l]) => `<button type="button" data-stop="${k}" aria-pressed="${state.stop === k}">${l}</button>`).join('');
+    $('#chips').innerHTML = CHIPS.map(([k, l, i, c, on]) =>
+      `<button class="chip" type="button" data-vibe="${k}" aria-pressed="${state.vibe === k}" style="--c:${c};--on:${on}">${ic(i)}${l}</button>`).join('');
+    const items = ACTS.filter(matches);
+    const nDone = items.filter(a => done.has(a.id)).length;
+    $('#count').textContent = `${items.length} thing${items.length === 1 ? '' : 's'} · ${nDone} done`;
+    $('#list').innerHTML = items.length
+      ? items.map(a => card(a, state.stop === 'all')).join('')
+      : `<div class="empty"><svg viewBox="0 0 200 212" aria-hidden="true"><use href="#dog"/></svg>${
+          state.vibe === 'saved' ? 'Nothing saved here yet. Tap the heart on anything you want to do.' : 'Nothing here for this stop. Try another filter.'}</div>`;
+  }
+
+  // ---------- Eats ----------
+  function renderEats() {
+    $('#eat-list').innerHTML = ['sco', 'fla', 'tuc'].map(s =>
+      `<p class="group-h" style="--c:${STOPS[s].c}"><i></i>${STOPS[s].name}</p>` +
+      ACTS.filter(a => a.s === s && a.v.includes('food')).map(a => card(a, false)).join('')).join('');
+  }
+
+  // ---------- Today ----------
+  function renderDays() {
+    $('#days').innerHTML = DAYS.map((D, i) => {
+      const { wd, n } = dateOf(i);
+      const c = D.s === 'home' ? 'var(--mint)' : STOPS[D.s].c;
+      return `<button class="day${i === dayIdx ? ' is-today' : ''}" type="button" role="tab" data-day="${i}" aria-selected="${i === sel}" style="--c:${c}" aria-label="${wd} ${n} October">
+        <span class="dw">${wd}</span><span class="dn">${n}</span><span class="dot"></span></button>`;
+    }).join('');
+    const el = $(`.day[data-day="${sel}"]`);
+    if (el) el.scrollIntoView({ block: 'nearest', inline: 'center' });
+  }
+
+  function renderNow() {
+    const D = DAYS[sel], { wd, n } = dateOf(sel);
+    const flag = sel === dayIdx ? '<span class="flag">Today</span>' : sel === dayIdx + 1 ? '<span class="flag">Tomorrow</span>' : '';
+    const here = D.s === 'home' ? 'Home' : STOPS[D.s].name;
+    const where = D.from ? `${STOPS[D.from].short} → ${here}` : here;
+    const LAB = { b: 'Booked', i: 'Idea', h: 'Heads up' };
+    const tonight = D.s === 'home'
+      ? 'Tonight: your own bed'
+      : `Tonight: <a href="${MAP(STOPS[D.s].hq)}" target="_blank" rel="noopener">${STOPS[D.s].hotel}</a>`;
+    $('#now').innerHTML = `
+      <div class="now-kicker"><span class="mono">${wd} ${n} Oct · Day ${sel + 1} of 12</span>${flag}</div>
+      <h2>${D.t}</h2>
+      <div class="where">${ic(D.from ? 'car' : 'pin')}${where}</div>
+      <ul class="plan">${D.p.map(([k, txt]) => `<li><span class="lab ${k}">${LAB[k]}</span><span>${txt}</span></li>`).join('')}</ul>
+      <div class="tonight">${ic('moon')}<span>${tonight}</span></div>`;
+
+    const banner = $('#banner');
+    if (dayIdx < 0) { banner.hidden = false; banner.textContent = `Trip starts in ${-dayIdx} day${dayIdx === -1 ? '' : 's'}!`; }
+    else if (dayIdx > 11) { banner.hidden = false; banner.textContent = "That's a wrap. Hope it was epic."; }
+    else banner.hidden = true;
+
+    // next booked thing after the selected day
+    const up = $('#upnext');
+    let j = -1, item = null;
+    for (let k = sel + 1; k < DAYS.length && !item; k++) {
+      const hit = DAYS[k].p.find(([type]) => type === 'b');
+      if (hit) { j = k; item = hit[1]; }
+    }
+    if (item) {
+      const gap = j - sel, dd = dateOf(j);
+      const when = gap === 1 ? (sel === dayIdx ? 'tomorrow' : 'next day') : `in ${gap} days`;
+      up.hidden = false;
+      up.innerHTML = `<span class="ico-box">${ic('ticket')}</span><span><span class="mono">Next booked · ${dd.wd} ${dd.n} · ${when}</span><b>${item}</b></span>`;
+    } else up.hidden = true;
+
+    // route
+    const cur = DAYS[sel].s;
+    const order = ['sco', 'fla', 'tuc'];
+    const pos = cur === 'home' ? 3 : order.indexOf(cur);
+    $('#route').innerHTML = order.map((s, k) => {
+      const cls = k === pos ? 'here' : k < pos ? 'past' : '';
+      const node = `<div class="stop ${cls}" style="--c:${STOPS[s].c};--on:${STOPS[s].on}">${STOPS[s].short}<small>${STOPS[s].dates}</small></div>`;
+      return k === 0 ? node : `<span class="link${k <= pos ? ' done' : ''}"></span>` + node;
+    }).join('');
+  }
+
+  function renderBucket() {
+    const total = ACTS.length;
+    const nDone = ACTS.filter(a => done.has(a.id)).length;
+    const nSaved = ACTS.filter(a => saved.has(a.id)).length;
+    $('#bucket-count').textContent = `${nDone} / ${total} done`;
+    $('#bucket-bar').style.width = (nDone / total * 100) + '%';
+    $('#bucket-saved').textContent = nSaved ? `${nSaved} saved · tap to see them all` : 'Tap to browse and heart what you want to do';
+  }
+
+  // ---------- Info ----------
+  function renderInfo() {
+    $('#hotels').innerHTML = ['sco', 'fla', 'tuc'].map((s, k) => {
+      const S = STOPS[s];
+      return `<div class="card-plain hotel" style="--c:${S.c};--on:${S.on}">
+        <span class="num">${k + 1}</span>
+        <div><h3><a href="${MAP(S.hq)}" target="_blank" rel="noopener">${S.hotel}</a></h3>
+        <p class="mono">${S.info}</p><p>${S.extra}</p></div></div>`;
+    }).join('');
+    $('#top10s').innerHTML = ['sco', 'fla', 'tuc'].map(s => {
+      const T = TOP10[s];
+      return `<details class="top10" style="--c:${STOPS[s].c}"><summary><i></i>${STOPS[s].name}</summary>
+        <ol>${T.list.map(([n, q]) => `<li><a href="${MAP(q)}" target="_blank" rel="noopener">${n}</a></li>`).join('')}</ol>
+        <a class="mono src" href="${T.url}" target="_blank" rel="noopener">Live ranking on Tripadvisor ↗</a></details>`;
+    }).join('');
+  }
+
+  // ---------- tabs ----------
+  const VIEWS = ['today', 'explore', 'eats', 'info'];
+  function show(v, push) {
+    if (!VIEWS.includes(v)) v = 'today';
+    VIEWS.forEach(id => { document.getElementById(id).hidden = id !== v; });
+    document.querySelectorAll('.tab').forEach(t => {
+      if (t.dataset.tab === v) t.setAttribute('aria-current', 'page'); else t.removeAttribute('aria-current');
+    });
+    if (push) { history.replaceState(null, '', v === 'today' ? location.pathname : '#' + v); window.scrollTo(0, 0); }
+    if (v === 'today') renderDays();
+  }
+
+  function refreshAll() { renderExplore(); renderEats(); renderBucket(); }
+
+  // ---------- events ----------
+  document.addEventListener('click', e => {
+    const el = e.target.closest('[data-heart],[data-done],[data-stop],[data-vibe],[data-day],[data-tab],[data-go],#dog');
+    if (!el) return;
+    if (el.dataset.heart) {
+      const id = el.dataset.heart;
+      saved.has(id) ? saved.delete(id) : saved.add(id);
+      save('hd:saved', saved); refreshAll();
+    } else if (el.dataset.done) {
+      const id = el.dataset.done;
+      done.has(id) ? done.delete(id) : done.add(id);
+      save('hd:done', done); refreshAll();
+    } else if (el.dataset.stop) {
+      state.stop = el.dataset.stop; renderExplore();
+    } else if (el.dataset.vibe) {
+      state.vibe = el.dataset.vibe; renderExplore();
+    } else if (el.dataset.day) {
+      sel = +el.dataset.day; renderDays(); renderNow();
+    } else if (el.dataset.tab) {
+      show(el.dataset.tab, true);
+    } else if (el.dataset.go) {
+      state.vibe = saved.size ? 'saved' : 'all'; state.stop = saved.size ? 'all' : state.stop;
+      renderExplore(); show(el.dataset.go, true);
+    } else if (el.id === 'dog') {
+      el.classList.remove('wiggle'); void el.offsetWidth; el.classList.add('wiggle');
+      const b = $('#bubble');
+      b.textContent = TIPS[Math.floor(Math.random() * TIPS.length)];
+      b.hidden = false;
+      clearTimeout(show.t); show.t = setTimeout(() => { b.hidden = true; }, 2600);
+    }
   });
+
+  renderNow(); refreshAll(); renderInfo();
+  show(location.hash.slice(1), false);
+  window.addEventListener('hashchange', () => show(location.hash.slice(1), false));
+})();
 </script>
+</body>
+</html>
