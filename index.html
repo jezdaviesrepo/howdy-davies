@@ -1030,8 +1030,8 @@
       b: 'A hole nearly a mile wide, made in seconds about 50,000 years ago. Rim walk, space museum, Apollo capsule.',
       t: '2–3 hrs', d: '40 min', photo: true },
     { id: 'lowell', s: 'fla', n: 'Lowell Observatory', q: 'Lowell Observatory Flagstaff', i: 'telescope', v: ['space'],
-      b: 'Pluto was discovered here. Night sky sessions have heated outdoor seats and big telescopes.',
-      t: 'Evening', d: '5 min', note: 'Book tickets · nights sell out' },
+      b: "Pluto was discovered here. You're booked on General Admission and the Dark Skies Planetarium Show, with big telescopes and heated outdoor seats.",
+      t: 'Evening', d: '10 min', booked: 'Wed 21 · 8:30pm' },
     { id: 'lavacave', s: 'fla', n: 'Lava River Cave', q: 'Lava River Cave Flagstaff', i: 'torch', v: ['thrills', 'outdoors'],
       b: 'A mile-long lava tube in complete darkness. You climb over rocks by torchlight. The most adventurous thing on this list.',
       t: '2 hrs', d: '30 min', who: 'teen', note: '2 torches each · check the road is open' },
@@ -1155,18 +1155,20 @@
       ['i', 'Afternoon: full-auto at Scottsdale Gun Club', 'gunclub'],
       ['i', 'Or afternoon: Taliesin West tour', 'taliesin'],
       ['i', 'Evening: Desert Botanical Garden at golden hour', 'botanical']] },
-    { s: 'fla', from: 'sco', t: 'Road trip north', p: [
+    { s: 'fla', from: 'sco', t: 'Road trip & stars', p: [
       ['h', 'Drive about 2.5 hrs to Flagstaff', ['Route', DIR('Hilton Scottsdale Resort and Villas', 'Americana Motor Hotel Flagstaff')]],
-      ['h', 'Warm layers out: Flagstaff and the Grand Canyon are 2,100 m up, so evenings get close to freezing'],
       ['i', 'Stop in Sedona for red rock photos', 'sedona'],
-      ['i', 'Bigfoot BBQ on Route 66 for dinner', 'bigfoot']] },
+      ['i', 'Early dinner at Bigfoot BBQ on Route 66', 'bigfoot'],
+      ['h', 'Warm layers out: Flagstaff and the Grand Canyon are 2,100 m up, so evenings get close to freezing'],
+      ['h', 'Leave the hotel by 8:00pm: about 10 min (4 miles) up Mars Hill', ['Route', DIR('Americana Motor Hotel Flagstaff', 'Lowell Observatory, 1400 W Mars Hill Rd, Flagstaff, AZ')]],
+      ['b', 'Lowell Observatory at 8:30pm: General Admission + Dark Skies Planetarium Show', 'lowell']] },
     { s: 'fla', t: 'Canyon country', p: [
       ['b', 'Grand Canyon (move it to your booked day)', 'canyon'],
       ['i', 'Planes of Fame on the drive back', 'planesfame']] },
     { s: 'fla', t: 'Space day', p: [
       ['i', 'Meteor Crater in the morning', 'meteor'],
       ['i', 'Lava River Cave if you are brave', 'lavacave'],
-      ['i', 'Lowell Observatory after dark', 'lowell']] },
+      ['i', 'Evening on Route 66 in downtown Flagstaff', 'route66']] },
     { s: 'tuc', from: 'fla', t: 'Hello, ranch', p: [
       ['h', 'Drive about 4 hrs to Tucson', ['Route', DIR('Americana Motor Hotel Flagstaff', 'White Stallion Ranch Tucson')]],
       ['b', 'Check in at White Stallion Ranch', 'hotel:tuc'],
