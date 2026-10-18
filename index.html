@@ -302,6 +302,8 @@
   .see.map { background: var(--card); color: var(--ink); }
   .see:active { transform: scale(.94); }
   .up-txt { flex: 1; min-width: 0; }
+  .up-txt .mono { display: block; }
+  .up-txt .links { margin: 8px 0 0; justify-content: flex-start; }
   .lab.b { background: var(--sun); }
   .lab.i { background: var(--card); }
   .lab.h { background: var(--sky); }
@@ -324,7 +326,7 @@
     box-shadow: var(--shadow);
     padding: 14px 16px;
   }
-  .upnext { display: flex; align-items: center; gap: 12px; }
+  .upnext { display: flex; align-items: flex-start; gap: 12px; }
   .upnext .ico-box {
     flex: 0 0 auto;
     width: 46px; height: 46px;
@@ -1237,7 +1239,7 @@
       const gap = j - sel, dd = dateOf(j);
       const when = gap === 1 ? (sel === dayIdx ? 'tomorrow' : 'next day') : `in ${gap} days`;
       up.hidden = false;
-      up.innerHTML = `<span class="ico-box">${ic('ticket')}</span><span class="up-txt"><span class="mono">Next booked · ${dd.wd} ${dd.n} · ${when}</span><b>${item}</b></span>${seeLinks(lk)}`;
+      up.innerHTML = `<span class="ico-box">${ic('ticket')}</span><span class="up-txt"><span class="mono">Next booked · ${dd.wd} ${dd.n} · ${when}</span><b>${item.replace(/\s*\(.*\)$/, '')}</b>${seeLinks(lk)}</span>`;
     } else up.hidden = true;
 
     // route
