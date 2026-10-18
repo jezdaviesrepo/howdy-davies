@@ -173,26 +173,50 @@
     padding: 12px 4px 10px;
     margin: -6px -4px -8px;
     scrollbar-width: none;
+    position: relative;
   }
   .days::-webkit-scrollbar { display: none; }
   .day {
     position: relative;
     flex: 0 0 auto;
     scroll-snap-align: center;
-    width: 58px;
-    padding: 7px 0 8px;
+    width: 60px;
+    padding: 7px 0 11px;
     border: 2px solid var(--ink);
     border-radius: 14px;
     background: var(--card);
-    box-shadow: 2px 2px 0 var(--ink);
+    box-shadow: inset 0 -5px 0 var(--c), 2px 2px 0 var(--ink);
     text-align: center;
     cursor: pointer;
     transition: transform .12s;
   }
   .day .dw { display: block; font-family: var(--mono); font-weight: 700; font-size: .6rem; letter-spacing: .08em; text-transform: uppercase; }
   .day .dn { display: block; font-family: var(--display); font-weight: 800; font-size: 1.4rem; line-height: 1.05; font-variant-numeric: tabular-nums; }
-  .day .dot { display: block; width: 9px; height: 9px; margin: 3px auto 0; border-radius: 50%; background: var(--c); border: 1.5px solid var(--ink); }
-  .day[aria-selected="true"] { background: var(--ink); color: #fff; transform: translateY(-3px); box-shadow: 3px 3px 0 var(--c); }
+  .dwx { display: flex; align-items: center; justify-content: center; gap: 2px; margin-top: 3px; font-weight: 800; font-size: .8rem; font-variant-numeric: tabular-nums; }
+  .dwx svg { width: 15px; height: 15px; flex: 0 0 auto; }
+  .day[aria-selected="true"] { background: var(--ink); color: #fff; transform: translateY(-3px); box-shadow: inset 0 -5px 0 var(--c), 3px 3px 0 var(--c); }
+  .wxi { color: var(--ink); }
+  .wx-sunny { color: #E39400; }
+  .wx-rain, .wx-storm { color: var(--cobalt); }
+  .wx-snow { color: #4A9FE0; }
+  .day[aria-selected="true"] .wxi { color: #fff; }
+  .day[aria-selected="true"] .wx-sunny { color: var(--sun); }
+  .wx {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 6px;
+    margin-top: 10px;
+    background: var(--card);
+    border: 2px solid var(--ink);
+    border-radius: 16px;
+    padding: 5px 12px 5px 8px;
+    font-weight: 700;
+    font-size: .92rem;
+  }
+  .wx svg { width: 24px; height: 24px; }
+  .wx b { font-family: var(--display); font-size: 1.2rem; letter-spacing: -.02em; }
+  .wx-src { font: 700 .55rem/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
   .day.is-today::before {
     content: "TODAY";
     position: absolute;
@@ -723,6 +747,14 @@
   <symbol id="i-torch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h8l-1.5 5h-5z"/><path d="M9.5 8h5v13h-5z"/><path d="M12 12v3M4 4l2 1M20 4l-2 1"/></symbol>
   <symbol id="i-ghost" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V10a7 7 0 0 1 14 0v11l-2.3-1.8L14.3 21 12 19.2 9.7 21l-2.4-1.8z"/><circle cx="9.5" cy="10.5" r="1" fill="currentColor"/><circle cx="14.5" cy="10.5" r="1" fill="currentColor"/></symbol>
   <symbol id="i-hat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 14.5c3 2.5 17 2.5 20 0"/><path d="M6.5 15c0-5 1.2-9 3-9 1 0 1.6 1 2.5 1s1.5-1 2.5-1c1.8 0 3 4 3 9"/></symbol>
+  <symbol id="w-sunny" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5" fill="currentColor" fill-opacity=".25"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></symbol>
+  <symbol id="w-partly" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8.5" r="3.2" fill="#FFC93C"/><path d="M8.5 2.5v1.2M2.5 8.5h1.2M4.3 4.3l.9.9M12.7 4.3l-.9.9"/><path d="M8 20h9a3.8 3.8 0 0 0 .3-7.6 5 5 0 0 0-9.4 1.3A3.2 3.2 0 0 0 8 20z" fill="#fff"/></symbol>
+  <symbol id="w-cloud" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 19h11a4.5 4.5 0 0 0 .4-9 6 6 0 0 0-11.6 1.6A3.8 3.8 0 0 0 6.5 19z"/></symbol>
+  <symbol id="w-rain" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 15h11a4 4 0 0 0 .3-8 5.5 5.5 0 0 0-10.6 1.4A3.4 3.4 0 0 0 6.5 15z"/><path d="M8.5 18l-1 2.5M12.5 18l-1 2.5M16.5 18l-1 2.5"/></symbol>
+  <symbol id="w-storm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 14h11a4 4 0 0 0 .3-8 5.5 5.5 0 0 0-10.6 1.4A3.4 3.4 0 0 0 6.5 14z"/><path d="M12.5 15.5 10 19.5h3l-2 3.5"/></symbol>
+  <symbol id="w-snow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 14h11a4 4 0 0 0 .3-8 5.5 5.5 0 0 0-10.6 1.4A3.4 3.4 0 0 0 6.5 14z"/><path d="M8 17.5v.01M12 19v.01M16 17.5v.01M10 21.5v.01M14 21.5v.01" stroke-width="3"/></symbol>
+  <symbol id="w-wind" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5h10.5a2.8 2.8 0 1 0-2.8-2.8M3 15.5h14.5a2.8 2.8 0 1 1-2.8 2.8M3 12h8"/></symbol>
+  <symbol id="w-fog" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 11h11a4 4 0 0 0 .2-8 5.5 5.5 0 0 0-10 1.5A3.2 3.2 0 0 0 6.5 11z"/><path d="M4 15h16M6 19h12"/></symbol>
   <symbol id="i-camera" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8h3.5l2-3h6l2 3h3.5v11.5h-17z"/><circle cx="12" cy="13.5" r="3.5"/></symbol>
   <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
   <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.2"/></symbol>
@@ -1247,16 +1279,73 @@
       ACTS.filter(a => a.s === s && a.v.includes('food')).map(a => card(a, false)).join('')).join('');
   }
 
+  // ---------- Weather ----------
+  // Live daily forecast from Open-Meteo (free, no key) for each base; typical October values as a fallback.
+  const WX_LOC = { sco: [33.528, -111.926], fla: [35.21, -111.61], tuc: [32.355, -111.14] };
+  const TYPICAL = { sco: [31, 17], fla: [17, 2], tuc: [28, 14] };
+  const wx = {};
+  const iso = i => { const d = new Date(2026, 9, 17 + i); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
+  const wxStop = i => DAYS[i].s === 'home' ? 'tuc' : DAYS[i].s;
+  function wxFor(i) {
+    const st = wxStop(i), live = wx[st + '|' + iso(i)];
+    return live ? { ...live, live: true } : { hi: TYPICAL[st][0], lo: TYPICAL[st][1], code: 0, wind: 0, live: false };
+  }
+  function wxKind(w) {
+    const c = w.code;
+    let k, l;
+    if (c >= 95) { k = 'storm'; l = 'Storms'; }
+    else if (c >= 85) { k = 'snow'; l = 'Snow showers'; }
+    else if (c >= 80) { k = 'rain'; l = 'Showers'; }
+    else if (c >= 71) { k = 'snow'; l = 'Snow'; }
+    else if (c >= 61) { k = 'rain'; l = 'Rain'; }
+    else if (c >= 51) { k = 'rain'; l = 'Drizzle'; }
+    else if (c >= 45) { k = 'fog'; l = 'Fog'; }
+    else if (c === 3) { k = 'cloud'; l = 'Cloudy'; }
+    else if (c >= 1) { k = 'partly'; l = c === 1 ? 'Mostly sunny' : 'Partly cloudy'; }
+    else { k = 'sunny'; l = 'Sunny'; }
+    if (w.wind >= 35) { if (k === 'sunny' || k === 'partly' || k === 'cloud') k = 'wind'; l += ', windy'; }
+    return [k, l];
+  }
+  const wxIcon = k => `<svg class="wxi wx-${k}" aria-hidden="true"><use href="#w-${k}"/></svg>`;
+  function applyWx(d) { Object.assign(wx, d); renderDays(); renderNow(); }
+  async function loadWeather() {
+    const KEY = 'hd:wx';
+    try {
+      const c = JSON.parse(localStorage.getItem(KEY));
+      if (c && Date.now() - c.t < 3 * 3600e3) { applyWx(c.d); return; }
+    } catch (e) {}
+    const stops = ['sco', 'fla', 'tuc'];
+    const url = 'https://api.open-meteo.com/v1/forecast?latitude=' + stops.map(s => WX_LOC[s][0]).join(',') +
+      '&longitude=' + stops.map(s => WX_LOC[s][1]).join(',') +
+      '&daily=weather_code,temperature_2m_max,temperature_2m_min,wind_speed_10m_max&timezone=America%2FPhoenix' +
+      '&start_date=' + iso(0) + '&end_date=' + iso(11);
+    try {
+      const r = await fetch(url);
+      if (!r.ok) return;
+      const j = await r.json();
+      const d = {};
+      (Array.isArray(j) ? j : [j]).forEach((loc, k) => loc.daily.time.forEach((t, n) => {
+        const code = loc.daily.weather_code[n], hi = loc.daily.temperature_2m_max[n];
+        if (code == null || hi == null) return;
+        d[stops[k] + '|' + t] = { hi: Math.round(hi), lo: Math.round(loc.daily.temperature_2m_min[n]), code, wind: loc.daily.wind_speed_10m_max[n] || 0 };
+      }));
+      try { localStorage.setItem(KEY, JSON.stringify({ t: Date.now(), d })); } catch (e) {}
+      applyWx(d);
+    } catch (e) {}
+  }
+
   // ---------- Today ----------
   function renderDays() {
     $('#days').innerHTML = DAYS.map((D, i) => {
       const { wd, n } = dateOf(i);
       const c = D.s === 'home' ? 'var(--mint)' : STOPS[D.s].c;
-      return `<button class="day${i === dayIdx ? ' is-today' : ''}" type="button" role="tab" data-day="${i}" aria-selected="${i === sel}" style="--c:${c}" aria-label="${wd} ${n} October">
-        <span class="dw">${wd}</span><span class="dn">${n}</span><span class="dot"></span></button>`;
+      const w = wxFor(i), [kind, label] = wxKind(w);
+      return `<button class="day${i === dayIdx ? ' is-today' : ''}" type="button" role="tab" data-day="${i}" aria-selected="${i === sel}" style="--c:${c}" aria-label="${wd} ${n} October, ${label}, high ${w.hi} degrees">
+        <span class="dw">${wd}</span><span class="dn">${n}</span><span class="dwx">${wxIcon(kind)}${w.hi}°</span></button>`;
     }).join('');
-    const el = $(`.day[data-day="${sel}"]`);
-    if (el) el.scrollIntoView({ block: 'nearest', inline: 'center' });
+    // centre the selected day inside the strip without scrolling the page
+    const strip = $('#days'), el = $(`.day[data-day="${sel}"]`);
+    if (el && strip.clientWidth) strip.scrollLeft = el.offsetLeft - (strip.clientWidth - el.offsetWidth) / 2;
   }
 
   function renderNow() {
@@ -1272,6 +1361,8 @@
       <div class="now-kicker"><span class="mono">${wd} ${n} Oct · Day ${sel + 1} of 12</span>${flag}</div>
       <h2>${D.t}</h2>
       <div class="where">${ic(D.from ? 'car' : 'pin')}${where}</div>
+      ${(() => { const w = wxFor(sel), [kind, label] = wxKind(w);
+        return `<div class="wx">${wxIcon(kind)}<b>${w.hi}°</b><span>/ ${w.lo}° · ${label}</span><span class="wx-src">${w.live ? 'Forecast' : 'Typical Oct'}</span></div>`; })()}
       <ul class="plan">${D.p.map(([k, txt, ref, save]) => {
         const sid = k === 'i' ? (save || (typeof ref === 'string' && ACTS.some(a => a.id === ref) ? ref : '')) : '';
         const inner = (sid ? heartBtn(sid, txt) : '') + linkBtns(ref);
@@ -1399,7 +1490,7 @@
     }
   });
 
-  renderNow(); refreshAll(); renderInfo();
+  renderNow(); refreshAll(); renderInfo(); loadWeather();
   show(location.hash.slice(1), false);
   window.addEventListener('hashchange', () => show(location.hash.slice(1), false));
   if (!still) {
