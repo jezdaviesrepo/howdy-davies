@@ -285,7 +285,9 @@
     top: -1px;
   }
   .plan .ptxt { flex: 1 1 150px; min-width: 0; }
-  .links { display: flex; flex-wrap: wrap; gap: 6px; margin-left: auto; }
+  .links { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-left: auto; }
+  .plan .heart { width: 30px; height: 30px; border-width: 1.5px; }
+  .plan .heart svg { width: 16px; height: 16px; }
   .see {
     flex: 0 0 auto;
     background: var(--ink);
@@ -1045,12 +1047,12 @@
     { s: 'tuc', from: 'fla', t: 'Hello, ranch', p: [
       ['h', 'Drive about 4 hrs to Tucson', ['Route', DIR('Americana Motor Hotel Flagstaff', 'White Stallion Ranch Tucson')]],
       ['b', 'Check in at White Stallion Ranch', 'hotel:tuc'],
-      ['i', 'Ask which night the weekly rodeo is', 'hotel:tuc']] },
+      ['i', 'Ask which night the weekly rodeo is', 'hotel:tuc', 'rodeo']] },
     { s: 'tuc', t: 'No-horse Sunday', p: [
       ['h', 'No riding today, the horses get a day off'],
-      ['i', 'Archery, target shooting, e-bikes, pool', 'hotel:tuc']] },
+      ['i', 'Archery, target shooting, e-bikes, pool', 'hotel:tuc', 'archery']] },
     { s: 'tuc', t: 'Saddle up', p: [
-      ['i', 'Morning ride, pool afternoon', 'hotel:tuc'],
+      ['i', 'Morning ride, pool afternoon', 'hotel:tuc', 'riding'],
       ['i', "Brother John's BBQ for a night out", 'brotherjohns']] },
     { s: 'tuc', t: 'Last ranch day', p: [
       ['i', 'Pima Air & Space + Boneyard tour', 'pima'],
@@ -1129,11 +1131,12 @@
   };
   const mapFor = r => r.startsWith('hotel:') ? MAP(STOPS[r.slice(6)].hq) : (a => MAP(a.q || a.n))(ACTS.find(a => a.id === r));
   const btn = (label, url, cls = '') => `<a class="see${cls}" href="${url}" target="_blank" rel="noopener">${label} ↗</a>`;
-  const seeLinks = ref => {
-    if (!ref) return '';
-    if (Array.isArray(ref)) return `<span class="links">${btn(ref[0], ref[1])}</span>`;
-    return `<span class="links">${SITES[ref] ? btn('Site', SITES[ref]) : ''}${btn('Map', mapFor(ref), ' map')}</span>`;
-  };
+  const linkBtns = ref => !ref ? '' : Array.isArray(ref) ? btn(ref[0], ref[1])
+    : `${SITES[ref] ? btn('Site', SITES[ref]) : ''}${btn('Map', mapFor(ref), ' map')}`;
+  const seeLinks = ref => { const b = linkBtns(ref); return b ? `<span class="links">${b}</span>` : ''; };
+  // Hearts on ideas use the same saved list as the Explore cards.
+  const heartBtn = (id, label) =>
+    `<button class="heart" type="button" data-heart="${id}" aria-pressed="${saved.has(id)}" aria-label="Save ${label}">${ic('heart')}</button>`;
   function card(a, showStop) {
     const v = VIBES[a.v[0]];
     const meta = [showStop ? STOPS[a.s].short : '', a.t, a.d && a.d + ' away'].filter(Boolean).join(' · ');
@@ -1232,7 +1235,11 @@
       <div class="now-kicker"><span class="mono">${wd} ${n} Oct · Day ${sel + 1} of 12</span>${flag}</div>
       <h2>${D.t}</h2>
       <div class="where">${ic(D.from ? 'car' : 'pin')}${where}</div>
-      <ul class="plan">${D.p.map(([k, txt, links]) => `<li><span class="lab ${k}">${LAB[k]}</span><span class="ptxt">${txt}</span>${seeLinks(links)}</li>`).join('')}</ul>
+      <ul class="plan">${D.p.map(([k, txt, ref, save]) => {
+        const sid = k === 'i' ? (save || (typeof ref === 'string' && ACTS.some(a => a.id === ref) ? ref : '')) : '';
+        const inner = (sid ? heartBtn(sid, txt) : '') + linkBtns(ref);
+        return `<li><span class="lab ${k}">${LAB[k]}</span><span class="ptxt">${txt}</span>${inner ? `<span class="links">${inner}</span>` : ''}</li>`;
+      }).join('')}</ul>
       <div class="tonight">${ic('moon')}<span>${tonight}</span></div>`;
 
     const banner = $('#banner');
@@ -1335,7 +1342,7 @@
     if (el.dataset.heart) {
       const id = el.dataset.heart;
       saved.has(id) ? saved.delete(id) : saved.add(id);
-      save('hd:saved', saved); refreshAll();
+      save('hd:saved', saved); refreshAll(); renderNow();
     } else if (el.dataset.done) {
       const id = el.dataset.done;
       done.has(id) ? done.delete(id) : done.add(id);
