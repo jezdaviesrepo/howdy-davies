@@ -337,6 +337,7 @@
   .lab.b { background: var(--sun); }
   .lab.i { background: var(--card); }
   .lab.h { background: var(--sky); }
+  .lab.f { background: var(--orange); }
   .tonight {
     display: flex;
     align-items: center;
@@ -1183,7 +1184,10 @@
       ['h', 'Check out of the ranch'],
       ['h', 'Drive about 1 hr 45 min (110 miles, I-10) to the Phoenix Sky Harbor Rental Car Center',
         ['Route', DIR('White Stallion Ranch Tucson', 'Rental Car Center, 1805 E Sky Harbor Cir S, Phoenix, AZ 85034')]],
-      ['h', 'Return the car, then take the PHX Sky Train to your terminal. Allow 30 min'],
+      ['f', 'Fill up at Shell, 1515 E Buckeye Rd. Closest, about half a mile from the car return', ['Map', MAP('Shell, 1515 E Buckeye Rd, Phoenix, AZ 85034')]],
+      ['f', 'Or Circle K, 699 E Buckeye Rd, about 1 mile away', ['Map', MAP('Circle K, 699 E Buckeye Rd, Phoenix, AZ 85034')]],
+      ['f', 'Or Chevron, 2402 E Washington St, about 1.5 miles away', ['Map', MAP('Chevron, 2402 E Washington St, Phoenix, AZ 85034')]],
+      ['h', 'Return the car with a full tank, then take the PHX Sky Train to your terminal. Allow 30 min'],
       ['i', 'Vote: best day, worst snack, funniest moment']] },
   ];
 
@@ -1526,7 +1530,7 @@
     const flag = sel === dayIdx ? '<span class="flag">Today</span>' : sel === dayIdx + 1 ? '<span class="flag">Tomorrow</span>' : '';
     const here = D.s === 'home' ? 'Home' : STOPS[D.s].name;
     const where = D.from ? `${STOPS[D.from].short} → ${here}` : here;
-    const LAB = { b: 'Booked', i: 'Idea', h: 'Heads up' };
+    const LAB = { b: 'Booked', i: 'Idea', h: 'Heads up', f: 'Fuel' };
     const tonight = D.s === 'home'
       ? 'Tonight: your own bed'
       : `Tonight: <a href="${MAP(STOPS[D.s].hq)}" target="_blank" rel="noopener">${STOPS[D.s].hotel}</a>`;
