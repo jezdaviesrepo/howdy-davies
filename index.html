@@ -464,7 +464,7 @@
     display: grid;
     align-content: space-between;
     gap: 8px;
-    min-height: 86px;
+    min-height: 128px;
     padding: 12px;
     border: 2.5px solid var(--ink);
     border-radius: 18px;
@@ -473,6 +473,15 @@
     color: var(--t);
     text-decoration: none;
   }
+  .fast .logo {
+    width: 64px; height: 46px;
+    border-radius: 12px;
+    background: #fff;
+    border: 2px solid var(--ink);
+    display: grid; place-items: center;
+    overflow: hidden;
+  }
+  .fast .logo img { display: block; max-width: 52px; max-height: 34px; width: auto; height: auto; }
   .fast b { font-family: var(--display); font-weight: 800; font-size: 1.12rem; line-height: 1.05; letter-spacing: -.02em; }
   .fast:active { transform: scale(.96); }
 
@@ -1338,17 +1347,17 @@
   }
 
   // ---------- Eats ----------
-  // [name, tile colour, text colour]. Tiles open Google Maps searching near the chosen base (or the phone).
+  // [name, logo file in logos/, tile colour, text colour]. Tiles open Google Maps near the chosen base (or the phone).
   const CHAINS = [
-    ['In-N-Out Burger', '#E2231A', '#FFD100'], ["Raising Cane's", '#C8102E', '#FFFFFF'],
-    ['Chick-fil-A', '#E51636', '#FFFFFF'], ["McDonald's", '#DA291C', '#FFC72C'],
-    ['Burger King', '#F5EBDC', '#D62300'], ['KFC', '#A3080C', '#FFFFFF'],
-    ['Taco Bell', '#5B2A86', '#FFFFFF'], ["Wendy's", '#E2203D', '#FFFFFF'],
-    ['Whataburger', '#FF7F00', '#FFFFFF'], ['Five Guys', '#D21033', '#FFFFFF'],
-    ['Shake Shack', '#1F1F1F', '#9BD143'], ['Chipotle', '#441500', '#FFFFFF'],
-    ['Panda Express', '#D02030', '#FFFFFF'], ['Jack in the Box', '#E41B17', '#FFFFFF'],
-    ['Sonic Drive-In', '#0072CE', '#FFD100'], ["Culver's", '#005DAA', '#FFFFFF'],
-    ['Dutch Bros Coffee', '#003B71', '#FFFFFF'], ['Starbucks', '#00704A', '#FFFFFF'],
+    ['In-N-Out Burger', 'innout', '#E2231A', '#FFD100'], ["Raising Cane's", 'canes', '#C8102E', '#FFFFFF'],
+    ['Chick-fil-A', 'chickfila', '#E51636', '#FFFFFF'], ["McDonald's", 'mcdonalds', '#DA291C', '#FFC72C'],
+    ['Burger King', 'burgerking', '#F5EBDC', '#D62300'], ['KFC', 'kfc', '#A3080C', '#FFFFFF'],
+    ['Taco Bell', 'tacobell', '#5B2A86', '#FFFFFF'], ["Wendy's", 'wendys', '#E2203D', '#FFFFFF'],
+    ['Whataburger', 'whataburger', '#FF7F00', '#FFFFFF'], ['Five Guys', 'fiveguys', '#D21033', '#FFFFFF'],
+    ['Shake Shack', 'shakeshack', '#1F1F1F', '#9BD143'], ['Chipotle', 'chipotle', '#441500', '#FFFFFF'],
+    ['Panda Express', 'panda', '#D02030', '#FFFFFF'], ['Jack in the Box', 'jackinthebox', '#E41B17', '#FFFFFF'],
+    ['Sonic Drive-In', 'sonic', '#0072CE', '#FFD100'], ["Culver's", 'culvers', '#005DAA', '#FFFFFF'],
+    ['Dutch Bros Coffee', 'dutchbros', '#003B71', '#FFFFFF'], ['Starbucks', 'starbucks', '#00704A', '#FFFFFF'],
   ];
   function renderEats() {
     $('#eat-seg').innerHTML = [['bbq', 'BBQ & good eats'], ['fast', 'Fast food']]
@@ -1358,8 +1367,9 @@
     $('#fast-seg').innerHTML = [['sco', 'Scottsdale'], ['fla', 'Flagstaff'], ['tuc', 'Ranch'], ['me', 'Near me']]
       .map(([k, l]) => `<button type="button" data-fast="${k}" aria-pressed="${state.fastStop === k}">${l}</button>`).join('');
     const near = state.fastStop === 'me' ? 'near me' : 'near ' + STOPS[state.fastStop].hq;
-    $('#fast-grid').innerHTML = CHAINS.map(([n, b, t]) =>
-      `<a class="fast" href="${MAP(n + ' ' + near)}" target="_blank" rel="noopener" style="--b:${b};--t:${t}"><b>${n}</b><span class="mono">Nearest ↗</span></a>`).join('');
+    $('#fast-grid').innerHTML = CHAINS.map(([n, logo, b, t]) =>
+      `<a class="fast" href="${MAP(n + ' ' + near)}" target="_blank" rel="noopener" style="--b:${b};--t:${t}">
+        <span class="logo"><img src="logos/${logo}.png" alt="" loading="lazy"></span><b>${n}</b><span class="mono">Nearest ↗</span></a>`).join('');
     $('#eat-list').innerHTML = ['sco', 'fla', 'tuc'].map(s =>
       `<p class="group-h" style="--c:${STOPS[s].c}"><i></i>${STOPS[s].name}</p>` +
       ACTS.filter(a => a.s === s && a.v.includes('food')).map(a => card(a, false)).join('')).join('');
