@@ -199,8 +199,8 @@
     /* a big sun on the horizon */
     content: "";
     position: absolute;
-    right: -46px; top: -46px;
-    width: 150px; height: 150px;
+    right: -62px; top: -70px;
+    width: 136px; height: 136px;
     border-radius: 50%;
     background: var(--sun);
     border: 2.5px solid var(--ink);
@@ -597,7 +597,7 @@
     <linearGradient id="hat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b17c3a"/><stop offset="1" stop-color="#875726"/></linearGradient>
   </defs>
 
-  <symbol id="dog" viewBox="0 0 200 212">
+  <symbol id="mascot" viewBox="0 0 200 212">
     <path d="M78 84 C48 86 26 112 30 148 Q32 172 43 188 Q49 180 55 188 Q61 178 68 186 Q76 150 80 118 C82 98 84 88 78 84 Z" fill="url(#ear)"/>
     <path d="M122 84 C152 86 174 112 170 148 Q168 172 157 188 Q151 180 145 188 Q139 178 132 186 Q124 150 120 118 C118 98 116 88 122 84 Z" fill="url(#ear)"/>
     <path d="M70 100 Q58 128 62 160" fill="none" stroke="#6b3f1a" stroke-width="2.4" stroke-linecap="round" opacity=".5"/>
@@ -674,7 +674,7 @@
 <header class="wrap top">
   <div class="brand">
     <button class="sticker" id="dog" type="button" aria-label="Tap the dog for a tip">
-      <svg viewBox="0 0 200 212" role="img" aria-label="Smiling cocker spaniel in a cowboy hat"><use href="#dog"/></svg>
+      <svg viewBox="0 0 200 212" role="img" aria-label="Smiling cocker spaniel in a cowboy hat"><use href="#mascot"/></svg>
     </button>
     <div class="brand-text">
       <p class="mono">Arizona road trip · Oct 2026</p>
@@ -740,7 +740,7 @@
     <div class="list" id="top10s"></div>
 
     <div class="foot">
-      <svg viewBox="0 0 200 212" aria-hidden="true"><use href="#dog"/></svg>
+      <svg viewBox="0 0 200 212" aria-hidden="true"><use href="#mascot"/></svg>
       <p class="mono">Made for the Davies crew · Happy trails</p>
     </div>
   </section>
@@ -1050,7 +1050,7 @@
     $('#count').textContent = `${items.length} thing${items.length === 1 ? '' : 's'} · ${nDone} done`;
     $('#list').innerHTML = items.length
       ? items.map(a => card(a, state.stop === 'all')).join('')
-      : `<div class="empty"><svg viewBox="0 0 200 212" aria-hidden="true"><use href="#dog"/></svg>${
+      : `<div class="empty"><svg viewBox="0 0 200 212" aria-hidden="true"><use href="#mascot"/></svg>${
           state.vibe === 'saved' ? 'Nothing saved here yet. Tap the heart on anything you want to do.' : 'Nothing here for this stop. Try another filter.'}</div>`;
   }
 
