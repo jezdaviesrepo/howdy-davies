@@ -563,6 +563,7 @@
     transition: transform .12s;
   }
   .done-btn svg { width: 16px; height: 16px; }
+  .foot-btns { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 6px; flex: 0 0 auto; }
   .done-btn[aria-pressed="true"] { background: var(--ink); color: #fff; }
   .act.is-done { background: #F4F2EC; }
   .act.is-done .act-head, .act.is-done .act-blurb { opacity: .5; }
@@ -777,6 +778,7 @@
   <symbol id="w-snow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 14h11a4 4 0 0 0 .3-8 5.5 5.5 0 0 0-10.6 1.4A3.4 3.4 0 0 0 6.5 14z"/><path d="M8 17.5v.01M12 19v.01M16 17.5v.01M10 21.5v.01M14 21.5v.01" stroke-width="3"/></symbol>
   <symbol id="w-wind" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5h10.5a2.8 2.8 0 1 0-2.8-2.8M3 15.5h14.5a2.8 2.8 0 1 1-2.8 2.8M3 12h8"/></symbol>
   <symbol id="w-fog" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 11h11a4 4 0 0 0 .2-8 5.5 5.5 0 0 0-10 1.5A3.2 3.2 0 0 0 6.5 11z"/><path d="M4 15h16M6 19h12"/></symbol>
+  <symbol id="i-fork" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v18M4.5 3v5a2.5 2.5 0 0 0 5 0V3M17.5 21V3c-2.5 1.2-3.5 4-3.5 7v4h3.5"/></symbol>
   <symbol id="i-camera" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8h3.5l2-3h6l2 3h3.5v11.5h-17z"/><circle cx="12" cy="13.5" r="3.5"/></symbol>
   <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
   <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.2"/></symbol>
@@ -875,7 +877,7 @@
     <div class="seg two" id="eat-seg" role="group" aria-label="Choose food type"></div>
     <div class="subview" id="eat-bbq">
       <h2 class="sec-title">Texas BBQ &amp; good eats</h2>
-      <p class="sec-sub">Smoked brisket at every stop. The ranch is full board, so its picks are for a night out.</p>
+      <p class="sec-sub">Smoked brisket plus the best-reviewed local spots at every stop. The ranch is full board, so its picks are for a night out.</p>
       <div class="list" id="eat-list"></div>
     </div>
     <div class="subview" id="eat-fast" hidden>
@@ -1092,6 +1094,35 @@
     { id: 'brushfire', s: 'tuc', n: 'BrushFire BBQ Co.', q: 'BrushFire BBQ Co Tucson', i: 'bbq', v: ['food'],
       b: 'A casual smokehouse. Easy lunch if you are out at the Desert Museum or Pima.',
       t: 'Lunch', d: '25 min' },
+
+    // ---------- Sit-down picks (from review guides) ----------
+    { id: 'barrioqueen', s: 'sco', n: 'Barrio Queen', url: 'https://www.barrioqueen.com/', q: 'Barrio Queen Old Town Scottsdale', i: 'fork', v: ['food'],
+      b: 'Old Town favourite for Mexican food. Guacamole is made at your table and the tortillas are fresh. Go early, it fills up.',
+      t: 'Dinner', d: '10 min' },
+    { id: 'hashkitchen', s: 'sco', n: 'Hash Kitchen', url: 'https://hashkitchen.com/', q: 'Hash Kitchen Scottsdale', i: 'fork', v: ['food'],
+      b: 'Big, lively brunch spot with a DJ and a build-your-own Bloody Mary bar for the grown-ups. Takes walk-ins.',
+      t: 'Brunch', d: '15 min' },
+    { id: 'sugarbowl', s: 'sco', n: 'The Sugar Bowl', url: 'https://sugarbowlscottsdale.com/', q: 'Sugar Bowl Ice Cream Parlor Scottsdale', i: 'fork', v: ['food'],
+      b: 'Pink 1950s ice cream parlour in Old Town. Giant sundaes, shakes and diner food.',
+      t: 'Dessert', d: '10 min', photo: true },
+    { id: 'pizzicletta', s: 'fla', n: 'Pizzicletta', url: 'https://www.pizzicletta.com/', q: 'Pizzicletta Flagstaff', i: 'fork', v: ['food'],
+      b: 'Tiny downtown spot for wood-fired Neapolitan pizza and house-made gelato. Expect a short wait.',
+      t: 'Dinner', d: '5 min' },
+    { id: 'diabloburger', s: 'fla', n: 'Diablo Burger', url: 'https://www.diabloburger.com/', q: 'Diablo Burger Flagstaff', i: 'fork', v: ['food'],
+      b: 'Burgers made from local open-range beef, just off downtown. The Señor Smoke is the one people rave about.',
+      t: 'Lunch or dinner', d: '5 min' },
+    { id: 'martannes', s: 'fla', n: "MartAnne's Burrito Palace", url: 'https://martannes.com/', q: "MartAnne's Burrito Palace Flagstaff", i: 'fork', v: ['food'],
+      b: 'Huge Mexican breakfasts served all day on Route 66. Weekend queues are worth it.',
+      t: 'Breakfast', d: '5 min' },
+    { id: 'elcharro', s: 'tuc', n: 'El Charro Café', url: 'https://www.elcharrocafe.com/', q: 'El Charro Cafe Downtown Tucson', i: 'fork', v: ['food'],
+      b: 'The oldest Mexican restaurant in the US still run by the same family. Famous for carne seca and chimichangas.',
+      t: 'Dinner', d: '30 min' },
+    { id: 'boca', s: 'tuc', n: 'BOCA by Chef María Mazón', url: 'https://bocatacos.com/', q: 'BOCA Tacos Tucson', i: 'fork', v: ['food'],
+      b: "A celebrated chef's taco spot with inventive tacos and a big salsa line-up. Casual and fun.",
+      t: 'Dinner', d: '30 min' },
+    { id: 'titoandpep', s: 'tuc', n: 'Tito & Pep', url: 'https://www.titoandpep.com/', q: 'Tito and Pep Tucson', i: 'fork', v: ['food'],
+      b: 'Modern wood-fired Sonoran cooking and a local favourite. A good grown-up night out.',
+      t: 'Dinner', d: '30 min' },
   ];
 
   // b = booked, i = idea, h = heads-up. Third item: a place (activity id or 'hotel:stop') -> Site + Map,
@@ -1248,7 +1279,7 @@
       <p class="act-blurb">${a.b}</p>
       <div class="act-foot">
         <div class="tags">${tags.join('')}</div>
-        <button class="done-btn" type="button" data-done="${a.id}" aria-pressed="${isDone}">${ic('check')}${isDone ? 'Done' : 'Done?'}</button>
+        <div class="foot-btns">${a.url ? btn('Site', a.url) : ''}${a.url && a.q ? btn('Map', MAP(a.q), ' map') : ''}<button class="done-btn" type="button" data-done="${a.id}" aria-pressed="${isDone}">${ic('check')}${isDone ? 'Done' : 'Done?'}</button></div>
       </div>
     </article>`;
   }
