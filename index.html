@@ -1024,7 +1024,12 @@
       ['b', 'Hot-air balloon at sunrise', 'balloon'],
       ['i', 'Pool nap, then the Southwest Wildlife Center', 'swcc']] },
     { s: 'sco', t: 'Last Scottsdale day', p: [
-      ['i', 'Little Miss BBQ lunch: queue before it opens', 'littlemiss'],
+      ['i', 'Morning: Pinnacle Peak hike before the heat', 'pinnacle'],
+      ['i', 'Or morning: Musical Instrument Museum', 'mim'],
+      ['i', 'Lunch: Little Miss BBQ, queue before it opens', 'littlemiss'],
+      ['i', 'Afternoon: full-auto at Scottsdale Gun Club', 'gunclub'],
+      ['i', 'Or afternoon: Taliesin West tour', 'taliesin'],
+      ['i', 'Evening: Desert Botanical Garden at golden hour', 'botanical'],
       ['h', 'Pack hoodies tonight. Flagstaff is cold']] },
     { s: 'fla', from: 'sco', t: 'Road trip north', p: [
       ['h', 'Drive about 2.5 hrs to Flagstaff', ['Route', DIR('Hilton Scottsdale Resort and Villas', 'Americana Motor Hotel Flagstaff')]],
@@ -1115,6 +1120,9 @@
     meteor: 'https://meteorcrater.com/', lavacave: 'https://www.fs.usda.gov/r03/coconino/recreation/lava-river-cave',
     lowell: 'https://lowell.edu/', brotherjohns: 'https://brotherjohns.com/',
     pima: 'https://pimaair.org/', saguaro: 'https://www.nps.gov/sagu/index.htm',
+    pinnacle: 'https://www.scottsdaleaz.gov/parks/find-a-park/pinnacle-peak-park', mim: 'https://mim.org/',
+    gunclub: 'https://scottsdalegunclub.com/', taliesin: 'https://franklloydwright.org/taliesin-west/',
+    botanical: 'https://dbg.org/',
   };
   const mapFor = r => r.startsWith('hotel:') ? MAP(STOPS[r.slice(6)].hq) : (a => MAP(a.q || a.n))(ACTS.find(a => a.id === r));
   const btn = (label, url, cls = '') => `<a class="see${cls}" href="${url}" target="_blank" rel="noopener">${label} ↗</a>`;
