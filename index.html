@@ -84,7 +84,7 @@
     padding: 5px 6px 3px;
     cursor: pointer;
     position: relative;
-    z-index: 31;
+    overflow: hidden;
   }
   .sticker svg { width: 100%; height: 100%; display: block; transform-origin: 50% 85%; animation: bob 4.5s ease-in-out infinite; }
   @keyframes bob { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
@@ -93,31 +93,30 @@
   .sticker .eye { transform-origin: 50% 55%; }
   .sticker .hat { transform-origin: 75% 100%; }
   .sticker .tongue { transform-origin: 30% 0%; }
-  .sticker.g-zoom { animation: g-zoom 2.4s cubic-bezier(.3, 1.35, .5, 1); }
-  .sticker.g-spin { animation: g-spin .9s cubic-bezier(.4, 1.3, .6, 1); }
-  .sticker.g-tilt { animation: g-tilt 1.4s ease-in-out; }
-  .sticker.g-bounce { animation: g-bounce .9s ease; }
+  .sticker.g-zoom svg { animation: g-zoom 2.4s cubic-bezier(.3, 1.35, .5, 1); transform-origin: 50% 64%; }
+  .sticker.g-spin svg { animation: g-spin .9s cubic-bezier(.4, 1.3, .6, 1); transform-origin: 50% 50%; }
+  .sticker.g-tilt svg { animation: g-tilt 1.4s ease-in-out; }
+  .sticker.g-bounce svg { animation: g-bounce .9s ease; }
   .sticker.g-wink .eye-r { animation: g-wink .6s ease; }
   .sticker.g-hat .hat { animation: g-hat 1.3s ease-in-out; }
   .sticker.g-wag .tongue { animation: g-wag 1.1s ease-in-out; }
   @keyframes g-zoom {
-    0% { transform: rotate(-8deg) scale(1); }
-    22% { transform: translate(64px, 40px) rotate(6deg) scale(2.1); }
-    40% { transform: translate(64px, 40px) rotate(-6deg) scale(2.1); }
-    58% { transform: translate(64px, 40px) rotate(5deg) scale(2.1); }
-    76% { transform: translate(64px, 40px) rotate(0deg) scale(2.1); }
-    100% { transform: rotate(-8deg) scale(1); }
+    0%, 100% { transform: scale(1); }
+    25% { transform: scale(1.85) rotate(4deg); }
+    45% { transform: scale(1.85) rotate(-4deg); }
+    65% { transform: scale(1.85) rotate(3deg); }
+    80% { transform: scale(1.85); }
   }
-  @keyframes g-spin { from { transform: rotate(-8deg); } to { transform: rotate(352deg); } }
-  @keyframes g-tilt { 0%, 100% { transform: rotate(-8deg); } 30%, 70% { transform: rotate(-28deg) translateY(-3px); } }
+  @keyframes g-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  @keyframes g-tilt { 0%, 100% { transform: rotate(0deg); } 30%, 70% { transform: rotate(-22deg); } }
   @keyframes g-bounce {
-    0%, 100% { transform: rotate(-8deg) translateY(0); }
-    30% { transform: rotate(-8deg) translateY(-22px); }
-    50% { transform: rotate(-8deg) translateY(0) scale(1.08, .92); }
-    70% { transform: rotate(-8deg) translateY(-9px); }
+    0%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-14px); }
+    50% { transform: translateY(0) scale(1.06, .94); }
+    70% { transform: translateY(-6px); }
   }
   @keyframes g-wink { 0%, 100% { transform: scaleY(1); } 35%, 65% { transform: scaleY(.1); } }
-  @keyframes g-hat { 0%, 100% { transform: none; } 35%, 65% { transform: translate(8px, -24px) rotate(16deg); } }
+  @keyframes g-hat { 0%, 100% { transform: none; } 35%, 65% { transform: translate(6px, -14px) rotate(14deg); } }
   @keyframes g-wag { 0%, 100% { transform: rotate(0); } 20% { transform: rotate(16deg); } 40% { transform: rotate(-10deg); } 60% { transform: rotate(13deg); } 80% { transform: rotate(-5deg); } }
   .brand-text { min-width: 0; }
   .brand-text .mono { color: var(--ink-2); margin: 0 0 4px; }
@@ -291,6 +290,7 @@
     flex: 0 0 auto;
     background: var(--ink);
     color: #fff;
+    border: 1.5px solid var(--ink);
     border-radius: 9px;
     padding: 7px 9px;
     font: 700 .62rem/1 var(--mono);
@@ -299,6 +299,7 @@
     text-decoration: none;
     white-space: nowrap;
   }
+  .see.map { background: var(--card); color: var(--ink); }
   .see:active { transform: scale(.94); }
   .up-txt { flex: 1; min-width: 0; }
   .lab.b { background: var(--sun); }
@@ -916,7 +917,7 @@
     { id: 'gunclub', s: 'sco', n: 'Full-auto at Scottsdale Gun Club', q: 'Scottsdale Gun Club', i: 'target', v: ['thrills'],
       b: 'Fire a machine gun on an indoor range with an instructor beside you. Loud and supervised.',
       d: '15 min', note: 'Age & ID rules · call ahead' },
-    { id: 'littlemiss', s: 'sco', n: 'Little Miss BBQ', url: 'https://littlemissbbq.com/', i: 'bbq', v: ['food'],
+    { id: 'littlemiss', s: 'sco', n: 'Little Miss BBQ', url: 'https://littlemissbbq.com/', q: 'Little Miss BBQ University Phoenix', i: 'bbq', v: ['food'],
       b: 'Central-Texas brisket that people queue for before the doors open. It sells out, so arrive early.',
       t: 'Lunch only', d: '25 min' },
 
@@ -927,7 +928,7 @@
     { id: 'sedona', s: 'fla', n: 'Sedona red rocks', q: 'Sedona Arizona', i: 'mountains', v: ['outdoors', 'thrills'],
       b: 'Red rock towers all around. Walk the Bell Rock loop, see the Chapel of the Holy Cross, and take a Pink Jeep tour for a wilder ride.',
       t: 'Full day', d: '45 min', photo: true },
-    { id: 'meteor', s: 'fla', n: 'Meteor Crater', url: 'https://meteorcrater.com/', i: 'crater', v: ['space'],
+    { id: 'meteor', s: 'fla', n: 'Meteor Crater', url: 'https://meteorcrater.com/', q: 'Meteor Crater Arizona', i: 'crater', v: ['space'],
       b: 'A hole nearly a mile wide, made in seconds about 50,000 years ago. Rim walk, space museum, Apollo capsule.',
       t: '2–3 hrs', d: '40 min', photo: true },
     { id: 'lowell', s: 'fla', n: 'Lowell Observatory', q: 'Lowell Observatory Flagstaff', i: 'telescope', v: ['space'],
@@ -1003,46 +1004,49 @@
       t: 'Lunch', d: '25 min' },
   ];
 
-  // b = booked, i = idea, h = heads-up. Third item: links as [label, activity id | 'hotel:stop' | url]
+  // b = booked, i = idea, h = heads-up. Third item: a place (activity id or 'hotel:stop') -> Site + Map,
+  // or ['Route', url] for drive directions.
   const DIR = (a, b) => 'https://www.google.com/maps/dir/?api=1&origin=' + encodeURIComponent(a) + '&destination=' + encodeURIComponent(b);
   const DAYS = [
     { s: 'sco', t: 'Touchdown, Scottsdale', p: [
-      ['h', 'Check in at the Hilton', [['Map', 'hotel:sco']]],
-      ['i', 'Lazy river, then dinner in Old Town', [['Pool', 'lazyriver'], ['Old Town', 'oldtown']]]] },
+      ['h', 'Check in at the Hilton', 'hotel:sco'],
+      ['i', 'Lazy river at the resort', 'lazyriver'],
+      ['i', 'Dinner in Old Town', 'oldtown']] },
     { s: 'sco', t: 'Desert Sunday', p: [
-      ['i', 'Museum of Illusions or OdySea Aquarium', [['Illusions', 'illusions'], ['OdySea', 'odysea']]],
-      ['i', 'Fashion Square if it gets too hot', [['See', 'fashion']]],
-      ['h', 'Early night: balloon pickup is before sunrise', [['Balloon', 'balloon']]]] },
+      ['i', 'Museum of Illusions', 'illusions'],
+      ['i', 'Or OdySea Aquarium + butterflies', 'odysea'],
+      ['i', 'Fashion Square if it gets too hot', 'fashion'],
+      ['h', 'Early night: balloon pickup is before sunrise']] },
     { s: 'sco', t: 'Balloon day', p: [
-      ['b', 'Hot-air balloon at sunrise', [['See', 'balloon']]],
-      ['i', 'Pool nap, then the Southwest Wildlife Center', [['See', 'swcc']]]] },
+      ['b', 'Hot-air balloon at sunrise', 'balloon'],
+      ['i', 'Pool nap, then the Southwest Wildlife Center', 'swcc']] },
     { s: 'sco', t: 'Last Scottsdale day', p: [
-      ['i', 'Little Miss BBQ lunch: queue before it opens', [['See', 'littlemiss']]],
+      ['i', 'Little Miss BBQ lunch: queue before it opens', 'littlemiss'],
       ['h', 'Pack hoodies tonight. Flagstaff is cold']] },
     { s: 'fla', from: 'sco', t: 'Road trip north', p: [
-      ['h', 'Drive about 2.5 hrs to Flagstaff', [['Route', DIR('Hilton Scottsdale Resort and Villas', 'Americana Motor Hotel Flagstaff')]]],
-      ['i', 'Stop in Sedona for red rock photos', [['See', 'sedona']]],
-      ['i', 'Bigfoot BBQ on Route 66 for dinner', [['See', 'bigfoot']]]] },
+      ['h', 'Drive about 2.5 hrs to Flagstaff', ['Route', DIR('Hilton Scottsdale Resort and Villas', 'Americana Motor Hotel Flagstaff')]],
+      ['i', 'Stop in Sedona for red rock photos', 'sedona'],
+      ['i', 'Bigfoot BBQ on Route 66 for dinner', 'bigfoot']] },
     { s: 'fla', t: 'Canyon country', p: [
-      ['b', 'Grand Canyon (move it to your booked day)', [['See', 'canyon']]],
-      ['i', 'Planes of Fame on the drive back', [['See', 'planesfame']]]] },
+      ['b', 'Grand Canyon (move it to your booked day)', 'canyon'],
+      ['i', 'Planes of Fame on the drive back', 'planesfame']] },
     { s: 'fla', t: 'Space day', p: [
-      ['i', 'Meteor Crater in the morning', [['See', 'meteor']]],
-      ['i', 'Lava River Cave if you are brave', [['See', 'lavacave']]],
-      ['i', 'Lowell Observatory after dark, hoodies on', [['See', 'lowell']]]] },
+      ['i', 'Meteor Crater in the morning', 'meteor'],
+      ['i', 'Lava River Cave if you are brave', 'lavacave'],
+      ['i', 'Lowell Observatory after dark, hoodies on', 'lowell']] },
     { s: 'tuc', from: 'fla', t: 'Hello, ranch', p: [
-      ['h', 'Drive about 4 hrs to Tucson', [['Route', DIR('Americana Motor Hotel Flagstaff', 'White Stallion Ranch Tucson')]]],
-      ['b', 'Check in at White Stallion Ranch', [['Map', 'hotel:tuc']]],
-      ['i', 'Ask which night the weekly rodeo is', [['Ranch', 'hotel:tuc']]]] },
+      ['h', 'Drive about 4 hrs to Tucson', ['Route', DIR('Americana Motor Hotel Flagstaff', 'White Stallion Ranch Tucson')]],
+      ['b', 'Check in at White Stallion Ranch', 'hotel:tuc'],
+      ['i', 'Ask which night the weekly rodeo is', 'hotel:tuc']] },
     { s: 'tuc', t: 'No-horse Sunday', p: [
       ['h', 'No riding today, the horses get a day off'],
-      ['i', 'Archery, target shooting, e-bikes, pool', [['Ranch', 'hotel:tuc']]]] },
+      ['i', 'Archery, target shooting, e-bikes, pool', 'hotel:tuc']] },
     { s: 'tuc', t: 'Saddle up', p: [
-      ['i', 'Morning ride, pool afternoon', [['Ranch', 'hotel:tuc']]],
-      ['i', "Brother John's BBQ for a night out", [['See', 'brotherjohns']]]] },
+      ['i', 'Morning ride, pool afternoon', 'hotel:tuc'],
+      ['i', "Brother John's BBQ for a night out", 'brotherjohns']] },
     { s: 'tuc', t: 'Last ranch day', p: [
-      ['i', 'Pima Air & Space + Boneyard, or one last ride', [['See', 'pima']]],
-      ['i', 'Sunset at Saguaro National Park', [['See', 'saguaro']]]] },
+      ['i', 'Pima Air & Space + Boneyard tour', 'pima'],
+      ['i', 'Sunset at Saguaro National Park', 'saguaro']] },
     { s: 'home', from: 'tuc', t: 'Heading home', p: [
       ['h', 'Check out and travel day'],
       ['i', 'Vote: best day, worst snack, funniest moment']] },
@@ -1096,9 +1100,26 @@
 
   // ---------- cards ----------
   const href = a => a.url || MAP(a.q);
-  const linkHref = r => r.startsWith('http') ? r : r.startsWith('hotel:') ? MAP(STOPS[r.slice(6)].hq) : href(ACTS.find(a => a.id === r));
-  const seeLinks = links => links && links.length
-    ? `<span class="links">${links.map(([l, r]) => `<a class="see" href="${linkHref(r)}" target="_blank" rel="noopener">${l} ↗</a>`).join('')}</span>` : '';
+  // Official sites, each checked to load (Hilton blocks bots but the URL is from its own listing).
+  const HILTON = 'https://www.hilton.com/en/hotels/sctshhf-hilton-scottsdale-resort-and-villas/';
+  const SITES = {
+    'hotel:sco': HILTON, lazyriver: HILTON, 'hotel:tuc': 'https://whitestallion.com/',
+    oldtown: 'https://www.experiencescottsdale.com/old-town/', illusions: 'https://www.moiscottsdale.com/',
+    odysea: 'https://www.odyseaaquarium.com/', fashion: 'https://www.fashionsquare.com/',
+    swcc: 'https://southwestwildlife.org/', littlemiss: 'https://littlemissbbq.com/',
+    sedona: 'https://visitsedona.com/', bigfoot: 'https://bigfootbbq.com/',
+    canyon: 'https://www.nps.gov/grca/index.htm', planesfame: 'https://planesoffame.org/',
+    meteor: 'https://meteorcrater.com/', lavacave: 'https://www.fs.usda.gov/r03/coconino/recreation/lava-river-cave',
+    lowell: 'https://lowell.edu/', brotherjohns: 'https://brotherjohns.com/',
+    pima: 'https://pimaair.org/', saguaro: 'https://www.nps.gov/sagu/index.htm',
+  };
+  const mapFor = r => r.startsWith('hotel:') ? MAP(STOPS[r.slice(6)].hq) : (a => MAP(a.q || a.n))(ACTS.find(a => a.id === r));
+  const btn = (label, url, cls = '') => `<a class="see${cls}" href="${url}" target="_blank" rel="noopener">${label} ↗</a>`;
+  const seeLinks = ref => {
+    if (!ref) return '';
+    if (Array.isArray(ref)) return `<span class="links">${btn(ref[0], ref[1])}</span>`;
+    return `<span class="links">${SITES[ref] ? btn('Site', SITES[ref]) : ''}${btn('Map', mapFor(ref), ' map')}</span>`;
+  };
   function card(a, showStop) {
     const v = VIBES[a.v[0]];
     const meta = [showStop ? STOPS[a.s].short : '', a.t, a.d && a.d + ' away'].filter(Boolean).join(' · ');
@@ -1216,7 +1237,7 @@
       const gap = j - sel, dd = dateOf(j);
       const when = gap === 1 ? (sel === dayIdx ? 'tomorrow' : 'next day') : `in ${gap} days`;
       up.hidden = false;
-      up.innerHTML = `<span class="ico-box">${ic('ticket')}</span><span class="up-txt"><span class="mono">Next booked · ${dd.wd} ${dd.n} · ${when}</span><b>${item}</b></span>${seeLinks(lk && lk.slice(0, 1))}`;
+      up.innerHTML = `<span class="ico-box">${ic('ticket')}</span><span class="up-txt"><span class="mono">Next booked · ${dd.wd} ${dd.n} · ${when}</span><b>${item}</b></span>${seeLinks(lk)}`;
     } else up.hidden = true;
 
     // route
