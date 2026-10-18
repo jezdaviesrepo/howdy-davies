@@ -262,11 +262,10 @@
     color: var(--ink);
     text-decoration: none;
   }
-  .now-wx .go { margin-left: 2px; font-size: .75rem; }
   .now-wx:active { transform: scale(.95); }
   .now-wx svg { width: 24px; height: 24px; margin-right: 2px; }
   .now-wx small { font-size: .85rem; color: var(--ink-2); }
-  .now-kicker { padding-right: 112px; min-height: 36px; align-content: center; }
+  .now-kicker { padding-right: 128px; min-height: 36px; align-content: center; }
   .now-kicker { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .flag {
     background: var(--ink);
@@ -1448,8 +1447,8 @@
     const w = wxFor(sel);
     const wxNote = `${w.label}, low ${w.lo}, high ${w.hi} degrees${w.live ? '' : ', typical for October'}`;
     $('#now').innerHTML = `
-      <a class="now-wx" href="${BBC[wxStop(sel)]}" target="_blank" rel="noopener" aria-label="${wxNote}. Open BBC Weather" title="${wxNote}">${wxIcon(w.kind)}${w.lo}°<small>/</small>${w.hi}°<small class="go">↗</small></a>
-      <div class="now-kicker"><span class="mono">${wd} ${n} Oct · Day ${sel + 1} of 12</span>${flag}</div>
+      <a class="now-wx" href="${BBC[wxStop(sel)]}" target="_blank" rel="noopener" aria-label="${wxNote}. Open BBC Weather" title="${wxNote}">${wxIcon(w.kind)}${w.lo}°<small>/</small>${w.hi}°</a>
+      <div class="now-kicker"><span class="mono">${wd} ${n} Oct · Day ${sel + 1}/12</span>${flag}</div>
       <h2>${D.t}</h2>
       <div class="where">${ic(D.from ? 'car' : 'pin')}${where}</div>
       <ul class="plan">${D.p.map(([k, txt, ref, save]) => {
