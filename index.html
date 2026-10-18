@@ -192,31 +192,11 @@
   }
   .day .dw { display: block; font-family: var(--mono); font-weight: 700; font-size: .6rem; letter-spacing: .08em; text-transform: uppercase; }
   .day .dn { display: block; font-family: var(--display); font-weight: 800; font-size: 1.4rem; line-height: 1.05; font-variant-numeric: tabular-nums; }
-  .dwx { display: flex; align-items: center; justify-content: center; gap: 2px; margin-top: 3px; font-weight: 800; font-size: .8rem; font-variant-numeric: tabular-nums; }
-  .dwx svg { width: 15px; height: 15px; flex: 0 0 auto; }
   .day[aria-selected="true"] { background: var(--ink); color: #fff; transform: translateY(-3px); box-shadow: inset 0 -5px 0 var(--c), 3px 3px 0 var(--c); }
   .wxi { color: var(--ink); }
   .wx-sunny { color: #E39400; }
   .wx-rain, .wx-storm { color: var(--cobalt); }
   .wx-snow { color: #4A9FE0; }
-  .day[aria-selected="true"] .wxi { color: #fff; }
-  .day[aria-selected="true"] .wx-sunny { color: var(--sun); }
-  .wx {
-    display: inline-flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 4px 6px;
-    margin-top: 10px;
-    background: var(--card);
-    border: 2px solid var(--ink);
-    border-radius: 16px;
-    padding: 5px 12px 5px 8px;
-    font-weight: 700;
-    font-size: .92rem;
-  }
-  .wx svg { width: 24px; height: 24px; }
-  .wx b { font-family: var(--display); font-size: 1.2rem; letter-spacing: -.02em; }
-  .wx-src { font: 700 .55rem/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
   .day.is-today::before {
     content: "TODAY";
     position: absolute;
@@ -262,6 +242,27 @@
     pointer-events: none;
   }
   .now > * { position: relative; z-index: 1; }
+  .now .now-wx {
+    position: absolute;
+    top: 14px; right: 14px;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--card);
+    border: 2px solid var(--ink);
+    border-radius: 999px;
+    box-shadow: 2px 2px 0 var(--ink);
+    padding: 4px 11px 4px 6px;
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 1rem;
+    letter-spacing: -.02em;
+    font-variant-numeric: tabular-nums;
+  }
+  .now-wx svg { width: 24px; height: 24px; margin-right: 2px; }
+  .now-wx small { font-size: .85rem; color: var(--ink-2); }
+  .now-kicker { padding-right: 112px; min-height: 36px; align-content: center; }
   .now-kicker { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .flag {
     background: var(--ink);
@@ -1390,9 +1391,8 @@
     $('#days').innerHTML = DAYS.map((D, i) => {
       const { wd, n } = dateOf(i);
       const c = D.s === 'home' ? 'var(--mint)' : STOPS[D.s].c;
-      const w = wxFor(i), kind = w.kind, label = w.label;
-      return `<button class="day${i === dayIdx ? ' is-today' : ''}" type="button" role="tab" data-day="${i}" aria-selected="${i === sel}" style="--c:${c}" aria-label="${wd} ${n} October, ${label}, high ${w.hi} degrees">
-        <span class="dw">${wd}</span><span class="dn">${n}</span><span class="dwx">${wxIcon(kind)}${w.hi}°</span></button>`;
+      return `<button class="day${i === dayIdx ? ' is-today' : ''}" type="button" role="tab" data-day="${i}" aria-selected="${i === sel}" style="--c:${c}" aria-label="${wd} ${n} October">
+        <span class="dw">${wd}</span><span class="dn">${n}</span></button>`;
     }).join('');
     // centre the selected day inside the strip without scrolling the page
     const strip = $('#days'), el = $(`.day[data-day="${sel}"]`);
@@ -1408,12 +1408,13 @@
     const tonight = D.s === 'home'
       ? 'Tonight: your own bed'
       : `Tonight: <a href="${MAP(STOPS[D.s].hq)}" target="_blank" rel="noopener">${STOPS[D.s].hotel}</a>`;
+    const w = wxFor(sel);
+    const wxNote = `${w.label}, low ${w.lo}, high ${w.hi} degrees${w.live ? '' : ', typical for October'}`;
     $('#now').innerHTML = `
+      <div class="now-wx" role="img" aria-label="${wxNote}" title="${wxNote}">${wxIcon(w.kind)}${w.lo}°<small>/</small>${w.hi}°</div>
       <div class="now-kicker"><span class="mono">${wd} ${n} Oct · Day ${sel + 1} of 12</span>${flag}</div>
       <h2>${D.t}</h2>
       <div class="where">${ic(D.from ? 'car' : 'pin')}${where}</div>
-      ${(() => { const w = wxFor(sel), kind = w.kind, label = w.label;
-        return `<div class="wx">${wxIcon(kind)}<b>${w.hi}°</b><span>/ ${w.lo}° · ${label}</span><span class="wx-src">${w.live ? 'Forecast' : 'Typical Oct'}</span></div>`; })()}
       <ul class="plan">${D.p.map(([k, txt, ref, save]) => {
         const sid = k === 'i' ? (save || (typeof ref === 'string' && ACTS.some(a => a.id === ref) ? ref : '')) : '';
         const inner = (sid ? heartBtn(sid, txt) : '') + linkBtns(ref);
